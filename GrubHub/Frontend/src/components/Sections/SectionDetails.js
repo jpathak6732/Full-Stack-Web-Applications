@@ -15,7 +15,7 @@ class SectionDetails extends Component {
             items: [],
             idcookie: cookie.load("id")
         }
-        this.viewButton = this.viewButton.bind(this);
+        this.deleteSection = this.deleteSection.bind(this);
     }
     //get the books data from backend  
     componentDidMount() {
@@ -36,25 +36,31 @@ class SectionDetails extends Component {
             });
     }
 
-    viewButton = (index) => {
-        console.log("Button clicked")
-        console.log("index is : " + index)
-
+    deleteSection = e => {
         var headers = new Headers();
         //prevent page from refresh
-        // e.preventDefault();
-        // const data = {
-        //     username: this.state.username,
-        //     password: this.state.password,
-        //     email: this.state.email,
-        //     restaurant: this.state.restaurant,
-        //     zipcode: this.state.zipcode
-        // };
-
-
+        e.preventDefault();
+        const data = {
+            sectionid: this.state.section
+        };
         //set the with credentials to true
-
+        axios.defaults.withCredentials = true;
+        //make a post request with the user data
+        axios.post("http://localhost:3001/deletesection", data).then(response => {
+            console.log("Status Code : ", response.status);
+            if (response.status === 200) {
+                window.location.replace("/ownersection");
+                this.setState({
+                    authFlag: true
+                });
+            } else {
+                this.setState({
+                    authFlag: false
+                });
+            }
+        });
     };
+
 
     render() {
         //iterate over books to create a table row
@@ -100,6 +106,7 @@ class SectionDetails extends Component {
                         </tbody>
                     </table>
                     <Link to={`/additem/${this.state.section}`} ><button className="btn btn-primary">Add New Item</button></Link>
+                    <button className="btn btn-primary" onClick={this.deleteSection} style={{ marginLeft: "1%" }}>Delete Section</button>
                 </div>
 
             </div>

@@ -833,7 +833,7 @@ app.post('/additemuploadimage', function (req, res) {
 
 
 app.post("/deletesectionitems", function (req, res) {
-  console.log("Inside Cancel Order Request");
+  console.log("Inside deletesectionitems Request");
   console.log("Req Body : ", req.body);
 
   var itemid = req.body.itemid;
@@ -1211,6 +1211,30 @@ app.post("/addsection", function (req, res) {
     }
   })
 });
+
+app.post("/deletesection", function (req, res) {
+  console.log("Inside deletesection Request");
+  console.log("Req Body : ", req.body);
+
+  var sectionid = req.body.sectionid;
+
+
+  sql = `delete from sections where sectionid=${sectionid}`;
+  //sql="Select name,email from " + radio + " where password="' + password + '";
+  console.log("SQL: " + sql);
+
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.log("Error occured : " + err);
+    } else {
+      res.writeHead(200, {
+        "Content-Type": "text/plain"
+      });
+      res.end("Successfully deleted the section");
+    }
+  });
+});
+
 
 
 
