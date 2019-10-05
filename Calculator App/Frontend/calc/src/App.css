@@ -1,0 +1,56 @@
+.App {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+}
+.calc-wrapper {
+  width: 400px;
+  height: 600px;
+}
+.row {
+  display: flex;
+  width: 100%;
+}
+
+.input {
+  display: flex;
+  height: 4em;
+  flex: 1;
+  background-color: #000;
+  outline: 1px solid #888;
+  color: #fff;
+  justify-content: flex-end;
+  padding: 0.5em;
+  font-weight: bold;
+  font-size: 1.4em;
+  align-items: center;
+}
+
+.clr-btn {
+  display: flex;
+  flex: 1;
+  height: 4em;
+  align-items: center;
+  justify-content: center;
+  font-weight: lighter;
+
+  font-size: 1.4em;
+  outline: 1px solid #888;
+  height: 4em;
+  background-color: #e0e1e6;
+}
+
+.btn {
+  display: flex;
+  height: 4em;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  font-weight: lighter;
+  font-size: 1.4em;
+  background-color: #e0e1e6;
+  color: #888;
+  outline: 1px solid #888;
+}
