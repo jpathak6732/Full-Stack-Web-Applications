@@ -1126,9 +1126,9 @@ app.post("/placeorder", function (req, res) {
 app.get("/buyerpastorders", function (req, res) {
   console.log("Inside OwnerHome Login");
 
-  sql = `select a.orderid, a.status, b.restaurantname from orders a,restaurant b
+  sql = `select a.orderid, a.status, b.restaurantname from orders a,owner b
   where a.buyerid=${req.query.idcookie} and
-  a.ownerid=b.ownerid and a.status="Delivered"`;
+  a.ownerid=b.id and a.status="Delivered"`;
   console.log("SQL: " + sql);
 
   db.query(sql, (err, result) => {
@@ -1149,9 +1149,9 @@ app.get("/buyerpastorders", function (req, res) {
 app.get("/buyerfutureorders", function (req, res) {
   console.log("Inside OwnerHome Login");
 
-  sql = `select a.orderid, a.status, b.restaurantname from orders a,restaurant b
+  sql = `select a.orderid, a.status, b.restaurantname from orders a,owner b
   where a.buyerid=${req.query.idcookie} and
-  a.ownerid=b.ownerid and a.status!="Delivered"`;
+  a.ownerid=b.id and a.status!="Delivered"`;
   console.log("SQL: " + sql);
 
   db.query(sql, (err, result) => {
@@ -1192,30 +1192,22 @@ app.get("/owneroldorders", function (req, res) {
 app.post("/addsection", function (req, res) {
   console.log("Inside Add Section Request");
   console.log("Req Body : ", req.body);
-
   var sectionname = req.body.sectionname;
   var idcookie = req.body.idcookie;
-
   console.log(sectionname)
-
   var idcookie = req.body.idcookie;
   sql = `insert into sections (sectionname,ownerid) values ('${sectionname}',${idcookie})`
-
   console.log(sql)
-
   db.query(sql, (err, result) => {
     if (err) {
       console.log("Error occured : " + err);
     } else {
-
       console.log("Data inserted into orders table successfully!")
-
       res.writeHead(200, {
         "Content-Type": "text/plain"
       });
       //console.log(JSON.stringify(resultObject))
       res.end("Section added successfully");
-
     }
   })
 });

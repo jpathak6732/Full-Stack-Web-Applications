@@ -16,6 +16,7 @@ class MenuDetails extends Component {
             itemdescription: this.props.data.description,
             itemprice: this.props.data.price,
             idcookie: cookie.load("id"),
+            image: "http://localhost:3001/profilepics/" + this.props.data.itemimage + "",
             quantity: ""
         }
         this.submitAdd = this.submitAdd.bind(this);
@@ -79,10 +80,10 @@ class MenuDetails extends Component {
             <Fragment>
 
                 <td>{this.props.data.name}</td>
-                <td>{this.props.data.itemimage}</td>
+                <td><img style={{ width: "30%", height: "auto", display: "block" }} src={this.state.image} /></td>
                 <td>{this.props.data.description}</td>
                 <td>{this.props.data.price}</td>
-                <td><input onChange={this.quantityChangeHandler} type="number" placeholder="Quantity"></input></td>
+                <td><input onChange={this.quantityChangeHandler} type="number" autoFocus placeholder="Quantity" style={{ width: "40%", height: "5%" }}></input></td>
                 <td><button onClick={this.submitAdd} className="btn btn-primary">Add</button></td>
             </Fragment>
         )

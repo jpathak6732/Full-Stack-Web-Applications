@@ -57,8 +57,9 @@ class MenuData extends Component {
         return (
             <div>
                 <h3>{this.props.data.sectionname}</h3>
-                <table class="table">
-                    <thead>
+                <br />
+                <table class="table table-bordered table-hover" style={{ textAlign: "center" }}>
+                    <thead class="thead-dark" style={{ textAlign: "center" }}>
                         <tr>
 
                             <th>Item Name</th>
@@ -70,7 +71,7 @@ class MenuData extends Component {
 
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody style={{ textAlign: "center" }}>
                         {/*Display the Tbale row based on data recieved*/}
                         {details}
                     </tbody>

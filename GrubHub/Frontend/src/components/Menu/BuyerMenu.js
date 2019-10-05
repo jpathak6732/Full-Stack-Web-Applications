@@ -74,7 +74,7 @@ class BuyerMenu extends Component {
                     <div>
                         {details}
                     </div>
-                    <Link to={`/viewcart`} > <button class="btn btn-success" type="submit">Search</button></Link>
+                    <Link to={`/viewcart`} > <button class="btn btn-success" type="submit">View Cart</button></Link>
                 </div>
 
             </div>
