@@ -25,6 +25,7 @@ import ViewCart from "./Cart/ViewCart";
 import BuyerPastOrders from "./Orders/BuyerPastOrders";
 import BuyerFutureOrders from "./Orders/BuyerFutureOrders";
 import OwnerOldOrders from "./Orders/OwnerOldOrders";
+import AddSection from "./Sections/AddSection";
 
 
 //Create a Main Component
@@ -57,6 +58,7 @@ class Main extends Component {
         <Route path="/buyerpastorders" component={BuyerPastOrders} />
         <Route path="/buyerfutureorders" component={BuyerFutureOrders} />
         <Route path="/owneroldorders" component={OwnerOldOrders} />
+        <Route path="/addsection" component={AddSection} />
 
 
       </div>

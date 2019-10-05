@@ -1159,6 +1159,49 @@ app.get("/owneroldorders", function (req, res) {
   });
 });
 
+app.post("/addsection", function (req, res) {
+  console.log("Inside Add Section Request");
+  console.log("Req Body : ", req.body);
+
+  var sectionname = req.body.sectionname;
+  var idcookie = req.body.idcookie;
+  restaurantid = "";
+
+  console.log(sectionname)
+
+  sql = `Select restaurantid from restaurant where ownerid=${idcookie}`
+
+  console.log(sql)
+
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.log("Error occured : " + err);
+    } else {
+
+      Object.keys(result).forEach(function (key) {
+        var row = result[key];
+        restaurantid = row.restaurantid;
+
+        console.log("restaurant id : " + restaurantid);
+
+      })
+
+      sql1 = `insert into sections (sectionname,restaurantid) values ('${sectionname}',${restaurantid}) `
+
+      console.log(sql1)
+
+      db.query(sql1, (err, result) => {
+        if (err) {
+          console.log("Error occured : " + err);
+        } else {
+          console.log("Data inserted into orders table successfully!")
+        }
+      });
+    }
+  })
+});
+
+
 
 //start your server on port 3001
 app.listen(3001);

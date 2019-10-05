@@ -12,7 +12,7 @@ class OwnerSection extends Component {
         this.state = {
             sections: []
         }
-        this.viewButton = this.viewButton.bind(this);
+
     }
     //get the books data from backend  
     componentDidMount() {
@@ -27,25 +27,7 @@ class OwnerSection extends Component {
             });
     }
 
-    viewButton = (index) => {
-        console.log("Button clicked")
-        console.log("index is : " + index)
 
-        var headers = new Headers();
-        //prevent page from refresh
-        // e.preventDefault();
-        // const data = {
-        //     username: this.state.username,
-        //     password: this.state.password,
-        //     email: this.state.email,
-        //     restaurant: this.state.restaurant,
-        //     zipcode: this.state.zipcode
-        // };
-
-
-        //set the with credentials to true
-
-    };
 
     render() {
         //iterate over books to create a table row
@@ -72,7 +54,7 @@ class OwnerSection extends Component {
             <div>
                 {/* {redirectVar} */}
                 <div class="container">
-                    <h2>List of All Open Orders</h2>
+                    <h2>List of Sections</h2>
                     <table class="table">
                         <thead>
                             <tr>
@@ -88,6 +70,7 @@ class OwnerSection extends Component {
                             {details}
                         </tbody>
                     </table>
+                    <Link to="/addsection"><button className="btn btn-primary" onClick={this.addSection}>Add Section</button></Link>
                 </div>
 
             </div>
