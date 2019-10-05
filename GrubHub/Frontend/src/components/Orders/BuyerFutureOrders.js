@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { Redirect } from 'react-router';
 import OrderData from "../Extra/OrderData"
 
-class BuyerPastOrders extends Component {
+class BuyerFutureOrders extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -18,7 +18,7 @@ class BuyerPastOrders extends Component {
     }
     //get the orders data from backend  
     componentDidMount() {
-        axios.get('http://localhost:3001/buyerpastorders', {
+        axios.get('http://localhost:3001/buyerfutureorders', {
             params: {
                 idcookie: this.state.idcookie
             }
@@ -58,7 +58,7 @@ class BuyerPastOrders extends Component {
             <div>
                 {/* {redirectVar} */}
                 <div class="container">
-                    <h2>List of All Past Orders</h2>
+                    <h2>List of All Future Orders</h2>
                     <table class="table">
                         <thead>
                             <tr>
@@ -81,4 +81,4 @@ class BuyerPastOrders extends Component {
     }
 }
 //export Home Component
-export default BuyerPastOrders;
+export default BuyerFutureOrders;

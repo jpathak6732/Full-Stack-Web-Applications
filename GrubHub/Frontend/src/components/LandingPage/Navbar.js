@@ -55,10 +55,10 @@ class Navbar extends Component {
               <Link to="/buyerprofile">Profile </Link>
             </li>
             <li>
-              <Link to="/buyerprofile">Past Orders</Link>
+              <Link to="/buyerpastorders">Past Orders</Link>
             </li>
             <li>
-              <Link to="/buyerprofile">Upcoming Orders</Link>
+              <Link to="/buyerfutureorders">Upcoming Orders</Link>
             </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
