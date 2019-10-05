@@ -17,9 +17,10 @@ class MenuData extends Component {
 
 
     componentDidMount() {
-        axios.get('http://localhost:3001/sectiondetails', {
+        axios.get('http://localhost:3001/sectiondetailsbuyer', {
             params: {
-                sectionid: this.props.data.sectionid
+                sectionid: this.props.data.sectionid,
+                ownerid: this.props.data.ownerid
             }
         })
             .then((response) => {

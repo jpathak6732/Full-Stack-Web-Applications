@@ -18,6 +18,7 @@ class AddItem extends Component {
             sectionid: this.props.match.params.sectionid,
             imagePath: "http://localhost:3001/profilepics/d.jpeg",
             itemimage: "",
+            idcookie: cookie.load("id"),
             authFlag: false
         };
         //Bind the handlers to this class
@@ -60,7 +61,8 @@ class AddItem extends Component {
             description: this.state.description,
             price: this.state.price,
             sectionid: this.state.sectionid,
-            itemimage: this.state.itemimage
+            itemimage: this.state.itemimage,
+            idcookie: this.state.idcookie
 
         };
         //set the with credentials to true

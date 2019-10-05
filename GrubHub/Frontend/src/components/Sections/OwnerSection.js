@@ -10,13 +10,18 @@ class OwnerSection extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            sections: []
+            sections: [],
+            idcookie: cookie.load("id")
         }
 
     }
     //get the books data from backend  
     componentDidMount() {
-        axios.get('http://localhost:3001/ownersection')
+        axios.get('http://localhost:3001/ownersection', {
+            params: {
+                idcookie: this.state.idcookie
+            }
+        })
             .then((response) => {
                 console.log("Received response")
                 //update the state with the response data

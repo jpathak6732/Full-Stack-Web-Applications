@@ -4,13 +4,15 @@ import axios from 'axios';
 import { Link } from "react-router-dom";
 import { Redirect } from "react-router";
 import MenuDetails from "../Menu/MenuDetails";
+import cookie from "react-cookies";
 
 class MenuData extends Component {
     constructor(props) {
         super(props);
         this.state = {
             section: this.props.data.sectionid,
-            items: []
+            items: [],
+            idcookie: cookie.load("id")
         }
 
     }
@@ -19,7 +21,8 @@ class MenuData extends Component {
     componentDidMount() {
         axios.get('http://localhost:3001/sectiondetails', {
             params: {
-                sectionid: this.props.data.sectionid
+                sectionid: this.props.data.sectionid,
+                idcookie: this.state.idcookie
             }
         })
             .then((response) => {

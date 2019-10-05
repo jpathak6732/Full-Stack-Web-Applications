@@ -10,13 +10,19 @@ class OwnerMenu extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            sections: []
+            sections: [],
+            idcookie: cookie.load("id")
         }
         this.viewButton = this.viewButton.bind(this);
     }
     //get the books data from backend  
     componentDidMount() {
-        axios.get('http://localhost:3001/ownersection')
+        axios.get('http://localhost:3001/ownersection', {
+            params: {
+                sectionid: this.props.match.params.sectionid,
+                idcookie: this.state.idcookie
+            }
+        })
             .then((response) => {
                 console.log("Received response")
                 //update the state with the response data

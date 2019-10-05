@@ -21,6 +21,7 @@ class Login extends Component {
       imagePath: "",
       imagePath1: "",
       emailcookie: cookie.load("email"),
+      idcookie: cookie.load("id"),
       authFlag: false
     };
     //Bind the handlers to this class
@@ -85,7 +86,8 @@ class Login extends Component {
       email: this.state.email,
       phone: this.state.phone,
       restaurant: this.state.restaurant,
-      cuisine: this.state.cuisine
+      cuisine: this.state.cuisine,
+      idcookie: this.state.idcookie
     };
     //set the with credentials to true
     axios.defaults.withCredentials = true;

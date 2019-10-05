@@ -22,7 +22,7 @@ class ViewRestaurantsData extends Component {
                 <td>{this.props.data.cuisine}</td>
                 {/* <td>{this.props.data.personaddress}</td>
                 <td>{this.props.data.status}</td> */}
-                <Link to={`/buyermenu/${this.props.data.restaurantid}`} >Details</Link>
+                <Link to={`/buyermenu/${this.props.data.id}`} >Details</Link>
             </Fragment>
         )
 

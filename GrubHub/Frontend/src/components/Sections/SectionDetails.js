@@ -12,15 +12,18 @@ class SectionDetails extends Component {
         super(props);
         this.state = {
             section: this.props.match.params.sectionid,
-            items: []
+            items: [],
+            idcookie: cookie.load("id")
         }
         this.viewButton = this.viewButton.bind(this);
     }
     //get the books data from backend  
     componentDidMount() {
+        console.log("SEction and cookie")
         axios.get('http://localhost:3001/sectiondetails', {
             params: {
-                sectionid: this.props.match.params.sectionid
+                sectionid: this.props.match.params.sectionid,
+                idcookie: this.state.idcookie
             }
         })
             .then((response) => {

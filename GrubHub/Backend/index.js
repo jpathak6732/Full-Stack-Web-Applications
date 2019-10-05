@@ -197,6 +197,7 @@ app.post("/ownerprofile", function (req, res) {
   var phone = req.body.phone;
   var restaurant = req.body.restaurant;
   var cuisine = req.body.cuisine;
+  idcookie = req.body.idcookie;
 
   sql = `update owner set name='${name}',email='${email}',restaurantname='${restaurant}',phone='${phone}',cuisine='${cuisine}' where email='${email}'`;
   //sql="Select name,email from " + radio + " where password="' + password + '";
@@ -206,6 +207,11 @@ app.post("/ownerprofile", function (req, res) {
     if (err) {
       console.log("Error occured : " + err);
     } else {
+
+      console.log("Profile updated successfully")
+
+      // sql1 = `insert into restaurant (restaurantname,restaurantimage) values ()`
+
       res.writeHead(200, {
         "Content-Type": "text/plain"
       });
@@ -666,7 +672,7 @@ app.post("/cancelorder", function (req, res) {
 app.get("/ownersection", function (req, res) {
   console.log("Inside OwnerSection Login");
 
-  sql = "select * from sections where restaurantid=1";
+  sql = `select * from sections where ownerid=${req.query.idcookie}`
   console.log("SQL: " + sql);
 
   db.query(sql, (err, result) => {
@@ -686,7 +692,30 @@ app.get("/ownersection", function (req, res) {
 app.get("/sectiondetails", function (req, res) {
   console.log("Inside Section Details");
 
-  sql = `select * from items where sectionid =${req.query.sectionid} `;
+  sql = `select * from items where sectionid =${req.query.sectionid} and ownerid=${req.query.idcookie} `;
+  console.log("SQL: " + sql);
+
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.log("Error occured : " + err);
+    } else {
+      console.log("Inside 200 response")
+      res.writeHead(200, {
+        "Content-Type": "text/plain"
+      });
+      console.log(JSON.stringify(result))
+      res.end(JSON.stringify(result));
+    }
+  });
+
+
+});
+
+
+app.get("/sectiondetailsbuyer", function (req, res) {
+  console.log("Inside Section Details");
+
+  sql = `select * from items where sectionid =${req.query.sectionid} and ownerid=${req.query.ownerid} `;
   console.log("SQL: " + sql);
 
   db.query(sql, (err, result) => {
@@ -741,9 +770,10 @@ app.post("/additem", function (req, res) {
   var price = req.body.price;
   var sectionid = req.body.sectionid;
   var itemimage = req.body.itemimage;
+  var idcookie = req.body.idcookie
 
   //sql = `insert into items (name,description,price,sectionid) values ('${itemname}','${description}','${price}',${sectionid})`;
-  sql = `update items set name='${itemname}',description='${description}',price='${price}',sectionid=${sectionid} where itemimage='${itemimage}'`
+  sql = `update items set name='${itemname}',description='${description}',price='${price}',sectionid=${sectionid}, ownerid=${idcookie} where itemimage='${itemimage}'`
   console.log("SQL: " + sql);
 
   db.query(sql, (err, result) => {
@@ -830,7 +860,7 @@ app.get("/viewrestaurants", function (req, res) {
   console.log("Inside Section Details");
 
   //sql = `select * from items where sectionid =${req.query.sectionid} `;
-  sql = `select * from restaurant where ownerid = (select ownerid from items where name ="${req.query.itemname}")`;
+  sql = `select id,restaurantname, restaurantimage, cuisine from owner where id in (select ownerid from items where name ="${req.query.itemname}")`;
 
   console.log("SQL: " + sql);
 
@@ -853,7 +883,7 @@ app.get("/viewrestaurants", function (req, res) {
 app.get("/buyersection", function (req, res) {
   console.log("Inside BuyerSection Login");
 
-  sql = `select * from sections where restaurantid=${req.query.restaurantid}`;
+  sql = `select * from sections where ownerid=${req.query.restaurantid}`;
   console.log("SQL: " + sql);
 
   db.query(sql, (err, result) => {
@@ -1165,11 +1195,11 @@ app.post("/addsection", function (req, res) {
 
   var sectionname = req.body.sectionname;
   var idcookie = req.body.idcookie;
-  restaurantid = "";
 
   console.log(sectionname)
 
-  sql = `Select restaurantid from restaurant where ownerid=${idcookie}`
+  var idcookie = req.body.idcookie;
+  sql = `insert into sections (sectionname,ownerid) values ('${sectionname}',${idcookie})`
 
   console.log(sql)
 
@@ -1178,25 +1208,14 @@ app.post("/addsection", function (req, res) {
       console.log("Error occured : " + err);
     } else {
 
-      Object.keys(result).forEach(function (key) {
-        var row = result[key];
-        restaurantid = row.restaurantid;
+      console.log("Data inserted into orders table successfully!")
 
-        console.log("restaurant id : " + restaurantid);
-
-      })
-
-      sql1 = `insert into sections (sectionname,restaurantid) values ('${sectionname}',${restaurantid}) `
-
-      console.log(sql1)
-
-      db.query(sql1, (err, result) => {
-        if (err) {
-          console.log("Error occured : " + err);
-        } else {
-          console.log("Data inserted into orders table successfully!")
-        }
+      res.writeHead(200, {
+        "Content-Type": "text/plain"
       });
+      //console.log(JSON.stringify(resultObject))
+      res.end("Section added successfully");
+
     }
   })
 });
