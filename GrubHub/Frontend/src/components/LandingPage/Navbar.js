@@ -41,6 +41,7 @@ class Navbar extends Component {
   render() {
     //if Cookie is set render Logout Button
     let navLogin = null;
+    let gb = null;
     if (cookie.load("cookie") === "buyer") {
       console.log("Able to read cookie");
       console.log(cookie.load("email"))
@@ -119,15 +120,26 @@ class Navbar extends Component {
       );
     }
     let redirectVar = null;
+    // if (cookie.load("cookie") === "buyer") {
+    //   redirectVar = <Redirect to="/buyerhome" />;
+    // } else if (cookie.load("cookie") === "owner") {
+    //   redirectVar = <Redirect to="/ownerhome" />;
+    // } else {
+    //   redirectVar = <Redirect to="/home" />;
+    // }
+
     if (cookie.load("cookie") === "buyer") {
-      redirectVar = <Redirect to="/buyerhome" />;
-    } else if (cookie.load("cookie") === "owner") {
-      redirectVar = <Redirect to="/ownerhome" />;
-    } else {
-      redirectVar = <Redirect to="/home" />;
+      gb =
+        <a class="navbar-brand" href="/buyerhome" color="red" >Grubhub</a>
     }
-
-
+    if (cookie.load("cookie") === "owner") {
+      gb =
+        <a class="navbar-brand" href="/ownerhome" color="red" >Grubhub</a>
+    }
+    if (!cookie.load("cookie")) {
+      gb =
+        <a class="navbar-brand" href="/login" color="red" >Grubhub</a>
+    }
 
     return (
       <div>
@@ -135,9 +147,10 @@ class Navbar extends Component {
         <nav class="navbar navbar-inverse">
           <div class="container-fluid">
             <div class="navbar-header">
-              <a class="navbar-brand" href="#" color="red">
+              {/* <a class="navbar-brand" href="#" color="red">
                 Grubhub
-              </a>
+              </a> */}
+              {gb}
             </div>
             <ul class="nav navbar-nav">
               {/* <li class="active">

@@ -158,23 +158,7 @@ app.post("/login", function (req, res) {
   //console.log("Req Body : ", username + "password : ",password);
   console.log("Req Body : ", req.body);
 
-  //   Users.filter(function(user) {
-  //     if (
-  //       user.username === req.body.username &&
-  //       user.password === req.body.password
-  //     ) {
-  //       res.cookie("cookie", "admin", {
-  //         maxAge: 900000,
-  //         httpOnly: false,
-  //         path: "/"
-  //       });
-  //       req.session.user = user;
-  //       res.writeHead(200, {
-  //         "Content-Type": "text/plain"
-  //       });
-  //       res.end("Successful Login");
-  //     }
-  //   });
+
 });
 
 app.post("/ownersignup", function (req, res) {
@@ -1050,11 +1034,8 @@ app.post("/placeorder", function (req, res) {
           Object.keys(result).forEach(function (key) {
             var row = result[key];
             orderid = row.orderid;
-
             console.log("Order id : " + orderid);
-
           });
-
 
           for (let i = 0; i < item.length; i++) {
             var itemname = item[i].itemname
@@ -1103,24 +1084,35 @@ app.post("/placeorder", function (req, res) {
 
                 }
               })
-
-
             }
           });
-
-
-
         }
       })
-
-
-
-
-
-
     }
   });
+});
 
+
+app.get("/buyerpastorders", function (req, res) {
+  console.log("Inside OwnerHome Login");
+
+  sql = `select a.orderid, a.status, b.restaurantname from orders a,restaurant b
+  where a.buyerid=${req.query.idcookie} and
+  a.ownerid=b.ownerid and a.status="Delivered"`;
+  console.log("SQL: " + sql);
+
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.log("Error occured : " + err);
+    } else {
+      console.log("Inside 200 response")
+      res.writeHead(200, {
+        "Content-Type": "text/plain"
+      });
+      //console.log(JSON.stringify(resultObject))
+      res.end(JSON.stringify(result));
+    }
+  });
 });
 
 //start your server on port 3001

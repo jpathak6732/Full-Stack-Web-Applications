@@ -22,6 +22,7 @@ import BuyerHome from "./Home/BuyerHome";
 import ViewRestaurants from "./Home/ViewRestaurants";
 import BuyerMenu from "./Menu/BuyerMenu";
 import ViewCart from "./Cart/ViewCart";
+import BuyerPastOrders from "./Orders/BuyerPastOrders";
 
 
 //Create a Main Component
@@ -51,6 +52,7 @@ class Main extends Component {
         <Route path="/viewrestaurants/:itemname" component={ViewRestaurants} />
         <Route path="/buyermenu/:restaurantid" component={BuyerMenu} />
         <Route path="/viewcart" component={ViewCart} />
+        <Route path="/buyerpastorders" component={BuyerPastOrders} />
 
 
       </div>

@@ -94,8 +94,8 @@ class Login extends Component {
     }
     return (
       <div>
-        {redirectVar}
-        {redirectAuth}
+        {/* {redirectVar}
+        {redirectAuth} */}
         <div class="wrapper fadeInDown">
           <div id="formContent">
             <div class="fadeIn first">
