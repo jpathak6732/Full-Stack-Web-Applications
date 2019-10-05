@@ -87,7 +87,7 @@ class Navbar extends Component {
               <Link to="/ownerprofile">Profile </Link>
             </li>
             <li>
-              <Link to="/ownerprofile">Old Orders</Link>
+              <Link to="/owneroldorders">Old Orders</Link>
             </li>
             <li>
               <Link to="/ownermenu">Menu</Link>

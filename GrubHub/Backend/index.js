@@ -1138,6 +1138,28 @@ app.get("/buyerfutureorders", function (req, res) {
   });
 });
 
+app.get("/owneroldorders", function (req, res) {
+  console.log("Inside OwnerHome Login");
+
+  sql = `select orderid, personname, status from orders
+  where ownerid=${req.query.idcookie} and status="Delivered"`;
+  console.log("SQL: " + sql);
+
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.log("Error occured : " + err);
+    } else {
+      console.log("Inside 200 response")
+      res.writeHead(200, {
+        "Content-Type": "text/plain"
+      });
+      //console.log(JSON.stringify(resultObject))
+      res.end(JSON.stringify(result));
+    }
+  });
+});
+
+
 //start your server on port 3001
 app.listen(3001);
 console.log("Server Listening on port 3001");
