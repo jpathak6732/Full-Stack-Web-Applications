@@ -11,7 +11,7 @@ app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use(bodyParser.json());
 
 //Allow Access Control
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader(
@@ -30,7 +30,7 @@ var inputNode = {
   calculatedString: ""
 };
 
-app.post("/calculate", function(req, res) {
+app.post("/calculate", function (req, res) {
   console.log("Inside Calculate Post Request");
   console.log("Req Body : " + req.body.input);
   var inputString = req.body.input;
@@ -53,7 +53,6 @@ app.post("/calculate", function(req, res) {
 
 //start your server on port 3001
 
-console.log("Hello world!");
 
 app.listen(3001);
 console.log("Server Listening on port 3001");

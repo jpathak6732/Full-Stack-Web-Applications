@@ -41,8 +41,9 @@ class App extends Component {
     };
     //set the with credentials to true
     axios.defaults.withCredentials = true;
-
+    console.log(data)
     axios.post("http://localhost:3001/calculate", data).then(response => {
+
       console.log("Status Code : ", response.status);
       if (response.status === 200) {
         console.log(response.data);
