@@ -120,13 +120,17 @@ class Navbar extends Component {
       );
     }
     let redirectVar = null;
-    // if (cookie.load("cookie") === "buyer") {
+    // if (!cookie.load("cookie") === "buyer") {
     //   redirectVar = <Redirect to="/buyerhome" />;
     // } else if (cookie.load("cookie") === "owner") {
     //   redirectVar = <Redirect to="/ownerhome" />;
     // } else {
     //   redirectVar = <Redirect to="/home" />;
     // }
+
+    if (!cookie.load()) {
+      redirectVar = <Redirect to="home" />
+    }
 
     if (cookie.load("cookie") === "buyer") {
       gb =
@@ -138,7 +142,8 @@ class Navbar extends Component {
     }
     if (!cookie.load("cookie")) {
       gb =
-        <a class="navbar-brand" href="/login" color="red" >Grubhub</a>
+        <a class="navbar-brand" href="/login" color="red" >Grubhub
+        </a>
     }
 
     return (

@@ -743,34 +743,6 @@ app.get("/orderitemdetails", function (req, res) {
 
 });
 
-app.post("/cancelorder", function (req, res) {
-  console.log("Inside Cancel Order Request");
-  console.log("Req Body : ", req.body);
-
-  var orderid = req.body.orderid;
-
-
-  sql = `delete from orders where orderid=${orderid}`;
-  //sql="Select name,email from " + radio + " where password="' + password + '";
-  console.log("SQL: " + sql);
-
-  pool.getConnection(function (err, db) {
-    if (err) {
-      console.log("Error while getting connection")
-    }
-    db.query(sql, (err, result) => {
-      if (err) {
-        console.log("Error occured : " + err);
-      } else {
-        res.writeHead(200, {
-          "Content-Type": "text/plain"
-        });
-        res.end("Successfully cancelled the order");
-      }
-    });
-    db.release()
-  });
-});
 
 
 app.post("/changestatus", function (req, res) {

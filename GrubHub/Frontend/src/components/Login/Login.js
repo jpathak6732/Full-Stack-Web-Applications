@@ -64,7 +64,11 @@ class Login extends Component {
     axios.post("http://localhost:3001/login", data).then(response => {
       console.log("Status Code : ", response.status);
       if (response.status === 200) {
-        window.location.replace("/home");
+        if (this.state.radio === "buyer") {
+          window.location.replace("/buyerhome");
+        } else if (this.state.radio === "owner") {
+          window.location.replace("/ownerhome");
+        }
         this.setState({
           authFlag: true
         });

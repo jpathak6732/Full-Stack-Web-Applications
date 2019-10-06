@@ -50,7 +50,7 @@ class MenuDetails extends Component {
                 this.setState({
                     authFlag: true
                 });
-                // window.location.reload();
+                window.location.reload();
 
             } else {
                 this.setState({
