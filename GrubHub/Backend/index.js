@@ -9,6 +9,7 @@ var multer = require("multer");
 var path = require("path");
 var mysql = require("mysql");
 app.set("view engine", "ejs");
+const bcrypt = require('bcrypt');
 
 //use cors to allow cross origin resource sharing
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
@@ -94,7 +95,7 @@ app.post("/login", function (req, res) {
   var radio = req.body.radio;
 
 
-  sql = `Select id,name,email from ${radio} where password = '${password}'`;
+  sql = `Select id,name,email,password from ${radio} where email = '${email}'`;
   //sql="Select name,email from " + radio + " where password="' + password + '";
   console.log("SQL: " + sql);
 
@@ -113,11 +114,16 @@ app.post("/login", function (req, res) {
             var name = row.name;
             var emailrow = row.email;
             var id = row.id;
+            var hash = row.password;
+
+
 
             console.log("Name : " + row.name);
             console.log("ID: " + id)
+            console.log("Pass: " + hash)
 
-            if (emailrow === email) {
+
+            if (bcrypt.compareSync(password, hash)) {
               res.cookie("email", email, {
                 maxAge: 900000,
                 httpOnly: false,
@@ -187,25 +193,28 @@ app.post("/ownersignup", function (req, res) {
   var restaurant = req.body.restaurant;
   var zipcode = req.body.zipcode;
 
-  sql = `insert into owner (name,email,password,restaurantname,zipcode) values ('${name}','${email}','${password}','${restaurant}',${zipcode})`;
-  //sql="Select name,email from " + radio + " where password="' + password + '";
-  console.log("SQL: " + sql);
+  bcrypt.hash(req.body.password, 10, function (err, hash) {
 
-  pool.getConnection(function (err, db) {
-    if (err) {
-      console.log("Error while getting connection")
-    }
-    db.query(sql, (err, result) => {
+    sql = `insert into owner (name,email,password,restaurantname,zipcode) values ('${name}','${email}','${password}','${restaurant}',${zipcode})`;
+    //sql="Select name,email from " + radio + " where password="' + password + '";
+    console.log("SQL: " + sql);
+
+    pool.getConnection(function (err, db) {
       if (err) {
-        console.log("Error occured : " + err);
-      } else {
-        res.writeHead(200, {
-          "Content-Type": "text/plain"
-        });
-        res.end("Successful Signup");
+        console.log("Error while getting connection")
       }
+      db.query(sql, (err, result) => {
+        if (err) {
+          console.log("Error occured : " + err);
+        } else {
+          res.writeHead(200, {
+            "Content-Type": "text/plain"
+          });
+          res.end("Successful Signup");
+        }
+      });
+      db.release()
     });
-    db.release()
   });
 
 });
@@ -289,25 +298,28 @@ app.post("/buyersignup", function (req, res) {
   var password = req.body.password;
   var email = req.body.email;
 
-  sql = `insert into buyer (name,email,password,profileimage) values ('${name}','${email}','${password}','d.jpeg')`;
-  //sql="Select name,email from " + radio + " where password="' + password + '";
-  console.log("SQL: " + sql);
+  bcrypt.hash(req.body.password, 10, function (err, hash) {
 
-  pool.getConnection(function (err, db) {
-    if (err) {
-      console.log("Error while getting connection")
-    }
-    db.query(sql, (err, result) => {
+    sql = `insert into buyer (name,email,password,profileimage) values ('${name}','${email}','${hash}','d.jpeg')`;
+    //sql="Select name,email from " + radio + " where password="' + password + '";
+    console.log("SQL: " + sql);
+
+    pool.getConnection(function (err, db) {
       if (err) {
-        console.log("Error occured : " + err);
-      } else {
-        res.writeHead(200, {
-          "Content-Type": "text/plain"
-        });
-        res.end("Successful Signup");
+        console.log("Error while getting connection")
       }
+      db.query(sql, (err, result) => {
+        if (err) {
+          console.log("Error occured : " + err);
+        } else {
+          res.writeHead(200, {
+            "Content-Type": "text/plain"
+          });
+          res.end("Successful Signup");
+        }
+      });
+      db.release()
     });
-    db.release()
   });
 });
 

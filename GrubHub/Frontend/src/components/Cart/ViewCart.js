@@ -77,6 +77,7 @@ class ViewCart extends Component {
             console.log("Status Code : ", response.status);
             if (response.status === 200) {
                 console.log("Order placed successfully")
+                window.location.replace("/buyerfutureorders")
                 this.setState({
                     authFlag: true
                 });
