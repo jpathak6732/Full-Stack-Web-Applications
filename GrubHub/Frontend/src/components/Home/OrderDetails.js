@@ -11,10 +11,12 @@ class OrderDetails extends Component {
         super(props);
         this.state = {
             items: [],
+            status: "",
             authFlag: false
         }
         this.cancelbutton = this.cancelbutton.bind(this);
         this.gotohome = this.gotohome.bind(this);
+        this.handleDropdown = this.handleDropdown.bind(this);
     }
     //get the books data from backend  
     componentDidMount() {
@@ -32,6 +34,11 @@ class OrderDetails extends Component {
             });
     }
 
+    handleDropdown = e => {
+        this.setState({
+            status: e.target.value
+        });
+    };
 
     cancelbutton = e => {
 
@@ -101,6 +108,18 @@ class OrderDetails extends Component {
                             {details}
                         </tbody>
                     </table>
+
+
+                    <h2>Change Order Status</h2>
+                    <br />
+                    <select class="form-control" onChange={this.handleDropdown}>
+                        <option value="volvo">Volvo</option>
+                        <option value="saab">Saab</option>
+                        <option value="mercedes">Mercedes</option>
+                        <option value="audi">Audi</option>
+                    </select>
+                    <br />
+                    <button className="btn btn-primary">Change Status!</button>
                     <input
                         type="button"
                         onClick={this.cancelbutton}

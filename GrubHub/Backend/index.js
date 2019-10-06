@@ -46,14 +46,14 @@ app.use(function (req, res, next) {
   next();
 });
 
-const db = mysql.createConnection({
+const cont = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "rootpasswordgiven",
   database: "myschema"
 });
 
-db.connect(err => {
+cont.connect(err => {
   if (err) {
     console.log("Error occured : " + err);
   } else {
@@ -61,7 +61,16 @@ db.connect(err => {
   }
 });
 
-global.db = db;
+global.cont = cont;
+
+
+var pool = mysql.createPool({
+  connectionLimit: 10,
+  host: "localhost",
+  user: "root",
+  password: "rootpasswordgiven",
+  database: "myschema"
+});
 
 var Users = [
   {
@@ -89,64 +98,71 @@ app.post("/login", function (req, res) {
   //sql="Select name,email from " + radio + " where password="' + password + '";
   console.log("SQL: " + sql);
 
-  db.query(sql, (err, result) => {
+  pool.getConnection(function (err, db) {
     if (err) {
-      console.log("Error occured : " + err);
-    } else {
-      if (result.length > 0) {
-        Object.keys(result).forEach(function (key) {
-          var row = result[key];
-          var name = row.name;
-          var emailrow = row.email;
-          var id = row.id;
-
-          console.log("Name : " + row.name);
-          console.log("ID: " + id)
-
-          if (emailrow === email) {
-            res.cookie("email", email, {
-              maxAge: 900000,
-              httpOnly: false,
-              path: "/"
-            });
-            res.cookie("cookie", radio, {
-              maxAge: 900000,
-              httpOnly: false,
-              path: "/"
-            });
-            res.cookie("id", id, {
-              maxAge: 900000,
-              httpOnly: false,
-              path: "/"
-            });
-            res.cookie("name", name, {
-              maxAge: 900000,
-              httpOnly: false,
-              path: "/"
-            });
-            req.session.user = email;
-
-            res.writeHead(200, {
-              "Content-Type": "text/plain"
-            });
-            res.end("Successful Login");
-          } else {
-            console.log(" Invalid credentials found ");
-            res.writeHead(201, {
-              "Content-Type": "text/plain"
-            });
-            res.end("Invalid credentials in Login");
-          }
-
-        });
-      } else {
-        console.log(" No users found ");
-        res.writeHead(201, {
-          "Content-Type": "text/plain"
-        });
-        res.end("Unsuccessful Login");
-      }
+      console.log("Error while getting connection")
     }
+
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.log("Error occured : " + err);
+      } else {
+        if (result.length > 0) {
+          Object.keys(result).forEach(function (key) {
+            var row = result[key];
+            var name = row.name;
+            var emailrow = row.email;
+            var id = row.id;
+
+            console.log("Name : " + row.name);
+            console.log("ID: " + id)
+
+            if (emailrow === email) {
+              res.cookie("email", email, {
+                maxAge: 900000,
+                httpOnly: false,
+                path: "/"
+              });
+              res.cookie("cookie", radio, {
+                maxAge: 900000,
+                httpOnly: false,
+                path: "/"
+              });
+              res.cookie("id", id, {
+                maxAge: 900000,
+                httpOnly: false,
+                path: "/"
+              });
+              res.cookie("name", name, {
+                maxAge: 900000,
+                httpOnly: false,
+                path: "/"
+              });
+              req.session.user = email;
+
+              res.writeHead(200, {
+                "Content-Type": "text/plain"
+              });
+              res.end("Successful Login");
+            } else {
+              console.log(" Invalid credentials found ");
+              res.writeHead(201, {
+                "Content-Type": "text/plain"
+              });
+              res.end("Invalid credentials in Login");
+            }
+
+          });
+        } else {
+          console.log(" No users found ");
+          res.writeHead(201, {
+            "Content-Type": "text/plain"
+          });
+          res.end("Unsuccessful Login");
+        }
+      }
+    });
+    db.release()
   });
 
   // Object.keys(req.body).forEach(function(key){
@@ -175,16 +191,23 @@ app.post("/ownersignup", function (req, res) {
   //sql="Select name,email from " + radio + " where password="' + password + '";
   console.log("SQL: " + sql);
 
-  db.query(sql, (err, result) => {
+  pool.getConnection(function (err, db) {
     if (err) {
-      console.log("Error occured : " + err);
-    } else {
-      res.writeHead(200, {
-        "Content-Type": "text/plain"
-      });
-      res.end("Successful Signup");
+      console.log("Error while getting connection")
     }
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.log("Error occured : " + err);
+      } else {
+        res.writeHead(200, {
+          "Content-Type": "text/plain"
+        });
+        res.end("Successful Signup");
+      }
+    });
+    db.release()
   });
+
 });
 
 
@@ -203,20 +226,26 @@ app.post("/ownerprofile", function (req, res) {
   //sql="Select name,email from " + radio + " where password="' + password + '";
   console.log("SQL: " + sql);
 
-  db.query(sql, (err, result) => {
+  pool.getConnection(function (err, db) {
     if (err) {
-      console.log("Error occured : " + err);
-    } else {
-
-      console.log("Profile updated successfully")
-
-      // sql1 = `insert into restaurant (restaurantname,restaurantimage) values ()`
-
-      res.writeHead(200, {
-        "Content-Type": "text/plain"
-      });
-      res.end("Successful Signup");
+      console.log("Error while getting connection")
     }
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.log("Error occured : " + err);
+      } else {
+
+        console.log("Profile updated successfully")
+
+        // sql1 = `insert into restaurant (restaurantname,restaurantimage) values ()`
+
+        res.writeHead(200, {
+          "Content-Type": "text/plain"
+        });
+        res.end("Successful Signup");
+      }
+    });
+    db.release()
   });
 });
 
@@ -234,15 +263,21 @@ app.post("/buyerprofile", function (req, res) {
   //sql="Select name,email from " + radio + " where password="' + password + '";
   console.log("SQL: " + sql);
 
-  db.query(sql, (err, result) => {
+  pool.getConnection(function (err, db) {
     if (err) {
-      console.log("Error occured : " + err);
-    } else {
-      res.writeHead(200, {
-        "Content-Type": "text/plain"
-      });
-      res.end("Successful Signup");
+      console.log("Error while getting connection")
     }
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.log("Error occured : " + err);
+      } else {
+        res.writeHead(200, {
+          "Content-Type": "text/plain"
+        });
+        res.end("Successful Signup");
+      }
+    });
+    db.release()
   });
 });
 
@@ -258,15 +293,21 @@ app.post("/buyersignup", function (req, res) {
   //sql="Select name,email from " + radio + " where password="' + password + '";
   console.log("SQL: " + sql);
 
-  db.query(sql, (err, result) => {
+  pool.getConnection(function (err, db) {
     if (err) {
-      console.log("Error occured : " + err);
-    } else {
-      res.writeHead(200, {
-        "Content-Type": "text/plain"
-      });
-      res.end("Successful Signup");
+      console.log("Error while getting connection")
     }
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.log("Error occured : " + err);
+      } else {
+        res.writeHead(200, {
+          "Content-Type": "text/plain"
+        });
+        res.end("Successful Signup");
+      }
+    });
+    db.release()
   });
 });
 
@@ -279,37 +320,43 @@ app.get("/ownerprofile", function (req, res) {
   //sql="Select name,email from " + radio + " where password="' + password + '";
   console.log("SQL: " + sql);
 
-  db.query(sql, (err, result) => {
+  pool.getConnection(function (err, db) {
     if (err) {
-      console.log("Error occured : " + err);
-    } else {
-
-
-      Object.keys(result).forEach(function (key) {
-        var row = result[key];
-        resultObject = {
-          username: row.name,
-          email: row.email,
-          phone: row.phone,
-          restaurant: row.restaurantname,
-          cuisine: row.cuisine,
-          profileimage: row.profileimage,
-          restaurantimage: row.restaurantimage
-        }
-        // var name = row.name;
-        console.log("Name : " + row.name)
-      })
-
-
-
-
-      console.log("Result : ", JSON.stringify(resultObject));
-      console.log("Inside 200 response")
-      res.writeHead(200, {
-        "Content-Type": "text/plain"
-      });
-      res.end(JSON.stringify(resultObject));
+      console.log("Error while getting connection")
     }
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.log("Error occured : " + err);
+      } else {
+
+
+        Object.keys(result).forEach(function (key) {
+          var row = result[key];
+          resultObject = {
+            username: row.name,
+            email: row.email,
+            phone: row.phone,
+            restaurant: row.restaurantname,
+            cuisine: row.cuisine,
+            profileimage: row.profileimage,
+            restaurantimage: row.restaurantimage
+          }
+          // var name = row.name;
+          console.log("Name : " + row.name)
+        })
+
+
+
+
+        console.log("Result : ", JSON.stringify(resultObject));
+        console.log("Inside 200 response")
+        res.writeHead(200, {
+          "Content-Type": "text/plain"
+        });
+        res.end(JSON.stringify(resultObject));
+      }
+    });
+    db.release()
   });
 
 });
@@ -324,35 +371,42 @@ app.get("/buyerprofile", function (req, res) {
   //sql="Select name,email from " + radio + " where password="' + password + '";
   console.log("SQL: " + sql);
 
-  db.query(sql, (err, result) => {
+  pool.getConnection(function (err, db) {
     if (err) {
-      console.log("Error occured : " + err);
-    } else {
-
-
-      Object.keys(result).forEach(function (key) {
-        var row = result[key];
-        resultObject = {
-          username: row.name,
-          email: row.email,
-          phone: row.phone,
-          profileimage: row.profileimage
-        }
-        // var name = row.name;
-        console.log("Name : " + row.name)
-      })
-
-
-
-
-      console.log("Result : ", JSON.stringify(resultObject));
-      console.log("Inside 200 response")
-      res.writeHead(200, {
-        "Content-Type": "text/plain"
-      });
-      res.end(JSON.stringify(resultObject));
+      console.log("Error while getting connection")
     }
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.log("Error occured : " + err);
+      } else {
+
+
+        Object.keys(result).forEach(function (key) {
+          var row = result[key];
+          resultObject = {
+            username: row.name,
+            email: row.email,
+            phone: row.phone,
+            profileimage: row.profileimage
+          }
+          // var name = row.name;
+          console.log("Name : " + row.name)
+        })
+
+
+
+
+        console.log("Result : ", JSON.stringify(resultObject));
+        console.log("Inside 200 response")
+        res.writeHead(200, {
+          "Content-Type": "text/plain"
+        });
+        res.end(JSON.stringify(resultObject));
+      }
+    });
+    db.release()
   });
+
 
 });
 
@@ -483,13 +537,20 @@ app.post('/buyerprofileuploadimage', function (req, res) {
       //sql="Select name,email from " + radio + " where password="' + password + '";
       console.log("SQL: " + sql);
 
-      db.query(sql, (err, result) => {
+      pool.getConnection(function (err, db) {
         if (err) {
-          console.log("Error occured : " + err);
-        } else {
-          console.log("Image updated in database")
+          console.log("Error while getting connection")
         }
+        db.query(sql, (err, result) => {
+          if (err) {
+            console.log("Error occured : " + err);
+          } else {
+            console.log("Image updated in database")
+          }
+        });
+        db.release()
       });
+
 
 
 
@@ -528,12 +589,18 @@ app.post('/ownerprofileuploadprofile', function (req, res) {
       //sql="Select name,email from " + radio + " where password="' + password + '";
       console.log("SQL: " + sql);
 
-      db.query(sql, (err, result) => {
+      pool.getConnection(function (err, db) {
         if (err) {
-          console.log("Error occured : " + err);
-        } else {
-          console.log("Image updated in database")
+          console.log("Error while getting connection")
         }
+        db.query(sql, (err, result) => {
+          if (err) {
+            console.log("Error occured : " + err);
+          } else {
+            console.log("Image updated in database")
+          }
+        });
+        db.release()
       });
 
 
@@ -571,12 +638,18 @@ app.post('/ownerprofileuploadrestaurant', function (req, res) {
       //sql="Select name,email from " + radio + " where password="' + password + '";
       console.log("SQL: " + sql);
 
-      db.query(sql, (err, result) => {
+      pool.getConnection(function (err, db) {
         if (err) {
-          console.log("Error occured : " + err);
-        } else {
-          console.log("Image updated in database")
+          console.log("Error while getting connection")
         }
+        db.query(sql, (err, result) => {
+          if (err) {
+            console.log("Error occured : " + err);
+          } else {
+            console.log("Image updated in database")
+          }
+        });
+        db.release()
       });
 
 
@@ -610,17 +683,23 @@ app.get("/ownerhome", function (req, res) {
   sql = `select * from orders where ownerid=${req.query.idcookie}`;
   console.log("SQL: " + sql);
 
-  db.query(sql, (err, result) => {
+  pool.getConnection(function (err, db) {
     if (err) {
-      console.log("Error occured : " + err);
-    } else {
-      console.log("Inside 200 response")
-      res.writeHead(200, {
-        "Content-Type": "text/plain"
-      });
-      //console.log(JSON.stringify(resultObject))
-      res.end(JSON.stringify(result));
+      console.log("Error while getting connection")
     }
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.log("Error occured : " + err);
+      } else {
+        console.log("Inside 200 response")
+        res.writeHead(200, {
+          "Content-Type": "text/plain"
+        });
+        //console.log(JSON.stringify(resultObject))
+        res.end(JSON.stringify(result));
+      }
+    });
+    db.release()
   });
 });
 
@@ -630,17 +709,23 @@ app.get("/orderitemdetails", function (req, res) {
   sql = `select * from orderdetails where orderid =${req.query.orderid} `;
   console.log("SQL: " + sql);
 
-  db.query(sql, (err, result) => {
+  pool.getConnection(function (err, db) {
     if (err) {
-      console.log("Error occured : " + err);
-    } else {
-      console.log("Inside 200 response")
-      res.writeHead(200, {
-        "Content-Type": "text/plain"
-      });
-      console.log(JSON.stringify(result))
-      res.end(JSON.stringify(result));
+      console.log("Error while getting connection")
     }
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.log("Error occured : " + err);
+      } else {
+        console.log("Inside 200 response")
+        res.writeHead(200, {
+          "Content-Type": "text/plain"
+        });
+        console.log(JSON.stringify(result))
+        res.end(JSON.stringify(result));
+      }
+    });
+    db.release()
   });
 
 
@@ -657,15 +742,21 @@ app.post("/cancelorder", function (req, res) {
   //sql="Select name,email from " + radio + " where password="' + password + '";
   console.log("SQL: " + sql);
 
-  db.query(sql, (err, result) => {
+  pool.getConnection(function (err, db) {
     if (err) {
-      console.log("Error occured : " + err);
-    } else {
-      res.writeHead(200, {
-        "Content-Type": "text/plain"
-      });
-      res.end("Successfully cancelled the order");
+      console.log("Error while getting connection")
     }
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.log("Error occured : " + err);
+      } else {
+        res.writeHead(200, {
+          "Content-Type": "text/plain"
+        });
+        res.end("Successfully cancelled the order");
+      }
+    });
+    db.release()
   });
 });
 
@@ -675,17 +766,23 @@ app.get("/ownersection", function (req, res) {
   sql = `select * from sections where ownerid=${req.query.idcookie}`
   console.log("SQL: " + sql);
 
-  db.query(sql, (err, result) => {
+  pool.getConnection(function (err, db) {
     if (err) {
-      console.log("Error occured : " + err);
-    } else {
-      console.log("Inside 200 response")
-      res.writeHead(200, {
-        "Content-Type": "text/plain"
-      });
-      //console.log(JSON.stringify(resultObject))
-      res.end(JSON.stringify(result));
+      console.log("Error while getting connection")
     }
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.log("Error occured : " + err);
+      } else {
+        console.log("Inside 200 response")
+        res.writeHead(200, {
+          "Content-Type": "text/plain"
+        });
+        //console.log(JSON.stringify(resultObject))
+        res.end(JSON.stringify(result));
+      }
+    });
+    db.release()
   });
 });
 
@@ -695,17 +792,23 @@ app.get("/sectiondetails", function (req, res) {
   sql = `select * from items where sectionid =${req.query.sectionid} and ownerid=${req.query.idcookie} `;
   console.log("SQL: " + sql);
 
-  db.query(sql, (err, result) => {
+  pool.getConnection(function (err, db) {
     if (err) {
-      console.log("Error occured : " + err);
-    } else {
-      console.log("Inside 200 response")
-      res.writeHead(200, {
-        "Content-Type": "text/plain"
-      });
-      console.log(JSON.stringify(result))
-      res.end(JSON.stringify(result));
+      console.log("Error while getting connection")
     }
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.log("Error occured : " + err);
+      } else {
+        console.log("Inside 200 response")
+        res.writeHead(200, {
+          "Content-Type": "text/plain"
+        });
+        console.log(JSON.stringify(result))
+        res.end(JSON.stringify(result));
+      }
+    });
+    db.release()
   });
 
 
@@ -718,17 +821,23 @@ app.get("/sectiondetailsbuyer", function (req, res) {
   sql = `select * from items where sectionid =${req.query.sectionid} and ownerid=${req.query.ownerid} `;
   console.log("SQL: " + sql);
 
-  db.query(sql, (err, result) => {
+  pool.getConnection(function (err, db) {
     if (err) {
-      console.log("Error occured : " + err);
-    } else {
-      console.log("Inside 200 response")
-      res.writeHead(200, {
-        "Content-Type": "text/plain"
-      });
-      console.log(JSON.stringify(result))
-      res.end(JSON.stringify(result));
+      console.log("Error while getting connection")
     }
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.log("Error occured : " + err);
+      } else {
+        console.log("Inside 200 response")
+        res.writeHead(200, {
+          "Content-Type": "text/plain"
+        });
+        console.log(JSON.stringify(result))
+        res.end(JSON.stringify(result));
+      }
+    });
+    db.release()
   });
 
 
@@ -748,15 +857,21 @@ app.post("/updatesectionitems", function (req, res) {
   //sql="Select name,email from " + radio + " where password="' + password + '";
   console.log("SQL: " + sql);
 
-  db.query(sql, (err, result) => {
+  pool.getConnection(function (err, db) {
     if (err) {
-      console.log("Error occured : " + err);
-    } else {
-      res.writeHead(200, {
-        "Content-Type": "text/plain"
-      });
-      res.end("Successfully updated section items");
+      console.log("Error while getting connection")
     }
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.log("Error occured : " + err);
+      } else {
+        res.writeHead(200, {
+          "Content-Type": "text/plain"
+        });
+        res.end("Successfully updated section items");
+      }
+    });
+    db.release()
   });
 });
 
@@ -776,15 +891,21 @@ app.post("/additem", function (req, res) {
   sql = `update items set name='${itemname}',description='${description}',price='${price}',sectionid=${sectionid}, ownerid=${idcookie} where itemimage='${itemimage}'`
   console.log("SQL: " + sql);
 
-  db.query(sql, (err, result) => {
+  pool.getConnection(function (err, db) {
     if (err) {
-      console.log("Error occured : " + err);
-    } else {
-      res.writeHead(200, {
-        "Content-Type": "text/plain"
-      });
-      res.end("Successfully added item");
+      console.log("Error while getting connection")
     }
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.log("Error occured : " + err);
+      } else {
+        res.writeHead(200, {
+          "Content-Type": "text/plain"
+        });
+        res.end("Successfully added item");
+      }
+    });
+    db.release()
   });
 });
 
@@ -813,12 +934,18 @@ app.post('/additemuploadimage', function (req, res) {
       sql = `insert into items (itemimage) values ('${filename}')`;
       console.log("SQL: " + sql);
 
-      db.query(sql, (err, result) => {
+      pool.getConnection(function (err, db) {
         if (err) {
-          console.log("Error occured : " + err);
-        } else {
-          console.log("Image updated in database")
+          console.log("Error while getting connection")
         }
+        db.query(sql, (err, result) => {
+          if (err) {
+            console.log("Error occured : " + err);
+          } else {
+            console.log("Image updated in database")
+          }
+        });
+        db.release()
       });
 
 
@@ -843,15 +970,21 @@ app.post("/deletesectionitems", function (req, res) {
   //sql="Select name,email from " + radio + " where password="' + password + '";
   console.log("SQL: " + sql);
 
-  db.query(sql, (err, result) => {
+  pool.getConnection(function (err, db) {
     if (err) {
-      console.log("Error occured : " + err);
-    } else {
-      res.writeHead(200, {
-        "Content-Type": "text/plain"
-      });
-      res.end("Successfully deleted the item");
+      console.log("Error while getting connection")
     }
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.log("Error occured : " + err);
+      } else {
+        res.writeHead(200, {
+          "Content-Type": "text/plain"
+        });
+        res.end("Successfully deleted the item");
+      }
+    });
+    db.release()
   });
 });
 
@@ -864,17 +997,23 @@ app.get("/viewrestaurants", function (req, res) {
 
   console.log("SQL: " + sql);
 
-  db.query(sql, (err, result) => {
+  pool.getConnection(function (err, db) {
     if (err) {
-      console.log("Error occured : " + err);
-    } else {
-      console.log("Inside 200 response")
-      res.writeHead(200, {
-        "Content-Type": "text/plain"
-      });
-      console.log(JSON.stringify(result))
-      res.end(JSON.stringify(result));
+      console.log("Error while getting connection")
     }
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.log("Error occured : " + err);
+      } else {
+        console.log("Inside 200 response")
+        res.writeHead(200, {
+          "Content-Type": "text/plain"
+        });
+        console.log(JSON.stringify(result))
+        res.end(JSON.stringify(result));
+      }
+    });
+    db.release()
   });
 
 
@@ -886,17 +1025,23 @@ app.get("/buyersection", function (req, res) {
   sql = `select * from sections where ownerid=${req.query.restaurantid}`;
   console.log("SQL: " + sql);
 
-  db.query(sql, (err, result) => {
+  pool.getConnection(function (err, db) {
     if (err) {
-      console.log("Error occured : " + err);
-    } else {
-      console.log("Inside 200 response")
-      res.writeHead(200, {
-        "Content-Type": "text/plain"
-      });
-      //console.log(JSON.stringify(resultObject))
-      res.end(JSON.stringify(result));
+      console.log("Error while getting connection")
     }
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.log("Error occured : " + err);
+      } else {
+        console.log("Inside 200 response")
+        res.writeHead(200, {
+          "Content-Type": "text/plain"
+        });
+        //console.log(JSON.stringify(resultObject))
+        res.end(JSON.stringify(result));
+      }
+    });
+    db.release()
   });
 });
 
@@ -914,15 +1059,21 @@ app.post("/addtocart", function (req, res) {
   //sql="Select name,email from " + radio + " where password="' + password + '";
   console.log("SQL: " + sql);
 
-  db.query(sql, (err, result) => {
+  pool.getConnection(function (err, db) {
     if (err) {
-      console.log("Error occured : " + err);
-    } else {
-      res.writeHead(200, {
-        "Content-Type": "text/plain"
-      });
-      res.end("Item added successfully");
+      console.log("Error while getting connection")
     }
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.log("Error occured : " + err);
+      } else {
+        res.writeHead(200, {
+          "Content-Type": "text/plain"
+        });
+        res.end("Item added successfully");
+      }
+    });
+    db.release()
   });
 });
 
@@ -933,17 +1084,23 @@ app.get("/viewcart", function (req, res) {
   sql = `select * from cart where buyerid=${idCookie}`;
   console.log("SQL: " + sql);
 
-  db.query(sql, (err, result) => {
+  pool.getConnection(function (err, db) {
     if (err) {
-      console.log("Error occured : " + err);
-    } else {
-      console.log("Inside 200 response")
-      res.writeHead(200, {
-        "Content-Type": "text/plain"
-      });
-      //console.log(JSON.stringify(resultObject))
-      res.end(JSON.stringify(result));
+      console.log("Error while getting connection")
     }
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.log("Error occured : " + err);
+      } else {
+        console.log("Inside 200 response")
+        res.writeHead(200, {
+          "Content-Type": "text/plain"
+        });
+        //console.log(JSON.stringify(resultObject))
+        res.end(JSON.stringify(result));
+      }
+    });
+    db.release()
   });
 });
 
@@ -956,21 +1113,26 @@ app.get("/calculateSum", function (req, res) {
   console.log("SQL: " + sql);
 
 
-
-  db.query(sql, (err, result) => {
+  pool.getConnection(function (err, db) {
     if (err) {
-      console.log("Error occured : " + err);
-    } else {
-      for (let i = 0; i < result.length; i++) {
-        sum = sum + result[i].quantity * result[i].price;
-      }
-      console.log("Inside 200 response")
-      res.writeHead(200, {
-        "Content-Type": "text/plain"
-      });
-      //console.log(JSON.stringify(resultObject))
-      res.end(String(sum));
+      console.log("Error while getting connection")
     }
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.log("Error occured : " + err);
+      } else {
+        for (let i = 0; i < result.length; i++) {
+          sum = sum + result[i].quantity * result[i].price;
+        }
+        console.log("Inside 200 response")
+        res.writeHead(200, {
+          "Content-Type": "text/plain"
+        });
+        //console.log(JSON.stringify(resultObject))
+        res.end(String(sum));
+      }
+    });
+    db.release()
   });
 });
 
@@ -984,28 +1146,33 @@ app.get("/cartitems", function (req, res) {
   console.log("SQL: " + sql);
 
 
-
-  db.query(sql, (err, result) => {
+  pool.getConnection(function (err, db) {
     if (err) {
-      console.log("Error occured : " + err);
-    } else {
-
-      Object.keys(result).forEach(function (key) {
-        var row = result[key];
-        var cartitem = row.count;
-
-        console.log("Cart Item : " + cartitem);
-
-        res.writeHead(200, {
-          "Content-Type": "text/plain"
-        });
-        //console.log(JSON.stringify(resultObject))
-        res.end(String(cartitem));
-
-      })
-
-
+      console.log("Error while getting connection")
     }
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.log("Error occured : " + err);
+      } else {
+
+        Object.keys(result).forEach(function (key) {
+          var row = result[key];
+          var cartitem = row.count;
+
+          console.log("Cart Item : " + cartitem);
+
+          res.writeHead(200, {
+            "Content-Type": "text/plain"
+          });
+          //console.log(JSON.stringify(resultObject))
+          res.end(String(cartitem));
+
+        })
+
+
+      }
+    });
+    db.release()
   });
 });
 
@@ -1027,7 +1194,8 @@ app.post("/placeorder", function (req, res) {
 
   console.log(sql)
 
-  db.query(sql, (err, result) => {
+
+  cont.query(sql, (err, result) => {
     if (err) {
       console.log("Error occured : " + err);
     } else {
@@ -1044,7 +1212,7 @@ app.post("/placeorder", function (req, res) {
 
       console.log(sql1)
 
-      db.query(sql1, (err, result) => {
+      cont.query(sql1, (err, result) => {
         if (err) {
           console.log("Error occured : " + err);
         } else {
@@ -1052,11 +1220,13 @@ app.post("/placeorder", function (req, res) {
         }
       });
 
+
       sql2 = `select orderid from orders where buyerid = ${idcookie} and flag=1`
 
       console.log(sql2)
 
-      db.query(sql2, (err, result) => {
+
+      cont.query(sql2, (err, result) => {
         if (err) {
           console.log("Error occured : " + err);
         } else {
@@ -1076,7 +1246,7 @@ app.post("/placeorder", function (req, res) {
 
             console.log(sql3)
 
-            db.query(sql3, (err, result) => {
+            cont.query(sql3, (err, result) => {
               if (err) {
                 console.log("Error occured : " + err);
               } else {
@@ -1084,13 +1254,15 @@ app.post("/placeorder", function (req, res) {
               }
             });
 
+
           }
 
           sql4 = `update orders set flag=2 where buyerid=${idcookie} and flag=1`
 
           console.log(sql4)
 
-          db.query(sql4, (err, result) => {
+
+          cont.query(sql4, (err, result) => {
             if (err) {
               console.log("Error occured : " + err);
             } else {
@@ -1100,7 +1272,8 @@ app.post("/placeorder", function (req, res) {
 
               console.log(sql5)
 
-              db.query(sql5, (err, result) => {
+
+              cont.query(sql5, (err, result) => {
                 if (err) {
                   console.log("Error occured : " + err);
                 } else {
@@ -1114,12 +1287,16 @@ app.post("/placeorder", function (req, res) {
 
                 }
               })
+
             }
           });
+
         }
       })
+
     }
   });
+
 });
 
 
@@ -1131,17 +1308,23 @@ app.get("/buyerpastorders", function (req, res) {
   a.ownerid=b.id and a.status="Delivered"`;
   console.log("SQL: " + sql);
 
-  db.query(sql, (err, result) => {
+  pool.getConnection(function (err, db) {
     if (err) {
-      console.log("Error occured : " + err);
-    } else {
-      console.log("Inside 200 response")
-      res.writeHead(200, {
-        "Content-Type": "text/plain"
-      });
-      //console.log(JSON.stringify(resultObject))
-      res.end(JSON.stringify(result));
+      console.log("Error while getting connection")
     }
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.log("Error occured : " + err);
+      } else {
+        console.log("Inside 200 response")
+        res.writeHead(200, {
+          "Content-Type": "text/plain"
+        });
+        //console.log(JSON.stringify(resultObject))
+        res.end(JSON.stringify(result));
+      }
+    });
+    db.release()
   });
 });
 
@@ -1154,17 +1337,23 @@ app.get("/buyerfutureorders", function (req, res) {
   a.ownerid=b.id and a.status!="Delivered"`;
   console.log("SQL: " + sql);
 
-  db.query(sql, (err, result) => {
+  pool.getConnection(function (err, db) {
     if (err) {
-      console.log("Error occured : " + err);
-    } else {
-      console.log("Inside 200 response")
-      res.writeHead(200, {
-        "Content-Type": "text/plain"
-      });
-      //console.log(JSON.stringify(resultObject))
-      res.end(JSON.stringify(result));
+      console.log("Error while getting connection")
     }
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.log("Error occured : " + err);
+      } else {
+        console.log("Inside 200 response")
+        res.writeHead(200, {
+          "Content-Type": "text/plain"
+        });
+        //console.log(JSON.stringify(resultObject))
+        res.end(JSON.stringify(result));
+      }
+    });
+    db.release()
   });
 });
 
@@ -1175,17 +1364,23 @@ app.get("/owneroldorders", function (req, res) {
   where ownerid=${req.query.idcookie} and status="Delivered"`;
   console.log("SQL: " + sql);
 
-  db.query(sql, (err, result) => {
+  pool.getConnection(function (err, db) {
     if (err) {
-      console.log("Error occured : " + err);
-    } else {
-      console.log("Inside 200 response")
-      res.writeHead(200, {
-        "Content-Type": "text/plain"
-      });
-      //console.log(JSON.stringify(resultObject))
-      res.end(JSON.stringify(result));
+      console.log("Error while getting connection")
     }
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.log("Error occured : " + err);
+      } else {
+        console.log("Inside 200 response")
+        res.writeHead(200, {
+          "Content-Type": "text/plain"
+        });
+        //console.log(JSON.stringify(resultObject))
+        res.end(JSON.stringify(result));
+      }
+    });
+    db.release()
   });
 });
 
@@ -1198,18 +1393,25 @@ app.post("/addsection", function (req, res) {
   var idcookie = req.body.idcookie;
   sql = `insert into sections (sectionname,ownerid) values ('${sectionname}',${idcookie})`
   console.log(sql)
-  db.query(sql, (err, result) => {
+
+  pool.getConnection(function (err, db) {
     if (err) {
-      console.log("Error occured : " + err);
-    } else {
-      console.log("Data inserted into orders table successfully!")
-      res.writeHead(200, {
-        "Content-Type": "text/plain"
-      });
-      //console.log(JSON.stringify(resultObject))
-      res.end("Section added successfully");
+      console.log("Error while getting connection")
     }
-  })
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.log("Error occured : " + err);
+      } else {
+        console.log("Data inserted into orders table successfully!")
+        res.writeHead(200, {
+          "Content-Type": "text/plain"
+        });
+        //console.log(JSON.stringify(resultObject))
+        res.end("Section added successfully");
+      }
+    })
+    db.release()
+  });
 });
 
 app.post("/deletesection", function (req, res) {
@@ -1223,15 +1425,21 @@ app.post("/deletesection", function (req, res) {
   //sql="Select name,email from " + radio + " where password="' + password + '";
   console.log("SQL: " + sql);
 
-  db.query(sql, (err, result) => {
+  pool.getConnection(function (err, db) {
     if (err) {
-      console.log("Error occured : " + err);
-    } else {
-      res.writeHead(200, {
-        "Content-Type": "text/plain"
-      });
-      res.end("Successfully deleted the section");
+      console.log("Error while getting connection")
     }
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.log("Error occured : " + err);
+      } else {
+        res.writeHead(200, {
+          "Content-Type": "text/plain"
+        });
+        res.end("Successfully deleted the section");
+      }
+    });
+    db.release()
   });
 });
 
