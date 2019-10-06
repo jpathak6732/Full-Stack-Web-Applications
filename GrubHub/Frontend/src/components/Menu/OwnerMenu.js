@@ -78,7 +78,7 @@ class OwnerMenu extends Component {
             <div>
                 {/* {redirectVar} */}
                 <div class="container">
-                    <h2>List of All Open Orders</h2>
+                    <h2>Your Menu :</h2>
                     {/* <table class="table">
                         <thead>
                             <tr>

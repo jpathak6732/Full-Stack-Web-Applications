@@ -79,8 +79,8 @@ class Home extends Component {
                 {/* {redirectVar} */}
                 <div class="container">
                     <h2>List of All Open Orders</h2>
-                    <table class="table">
-                        <thead>
+                    <table class="table table-bordered table-hover" style={{ textAlign: "left" }}>
+                        <thead class="thead-dark" style={{ textAlign: "center" }}>
                             <tr>
                                 <th>Order ID</th>
                                 <th>Person Name</th>

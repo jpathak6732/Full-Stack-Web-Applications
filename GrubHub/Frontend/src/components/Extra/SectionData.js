@@ -43,7 +43,7 @@ class SectionData extends Component {
                 <td>{this.props.data.sectionname}</td>
                 {/* <td>{this.props.data.personaddress}</td>
                 <td>{this.props.data.status}</td> */}
-                <Link to={`/sectiondetails/${this.props.data.sectionid}`} >Details</Link>
+                <td><Link to={`/sectiondetails/${this.props.data.sectionid}`} ><button className="btn btn-primary">Details</button></Link></td>
             </Fragment>
         )
 

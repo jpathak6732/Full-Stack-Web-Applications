@@ -87,10 +87,10 @@ class SectionDetails extends Component {
             <div>
                 {/* {redirectVar} */}
                 <div class="container">
-                    <h2>List of All Open Orders</h2>
-                    <table class="table">
-                        <thead>
-                            <tr>
+                    <h2>Section Details</h2>
+                    <table class="table table-bordered table-hover" style={{ textAlign: "left" }}>
+                        <thead class="thead-dark" style={{ textAlign: "center" }}>
+                            <tr style={{ textAlign: "center" }}>
                                 <th>Section</th>
                                 <th>Item Name</th>
                                 <th>Item Image</th>

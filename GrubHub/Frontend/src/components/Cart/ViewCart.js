@@ -111,8 +111,8 @@ class ViewCart extends Component {
                 {/* {redirectVar} */}
                 <div class="container">
                     <h2>List of All items</h2>
-                    <table class="table">
-                        <thead>
+                    <table class="table table-bordered table-hover" style={{ textAlign: "left" }}>
+                        <thead class="thead-dark" style={{ textAlign: "center" }}>
                             <tr>
                                 <th>Item</th>
                                 <th>Quantity</th>
@@ -134,12 +134,12 @@ class ViewCart extends Component {
                         <h2>Let's get your delivery details</h2>
                         <br>
                         </br>
-                        <h4>    Delivery Address </h4>
+
                         <input type="text" onChange={this.addressChangeHandler} placeholder="Delivery Address"></input>
                     </div>
                     <br></br>
                     <button onClick={this.placeOrder} className="btn btn-primary">Place Order</button>
-                    <button onClick={this.goBack} className="btn btn-primary">Go Back</button>
+                    <button style={{ marginLeft: "1%" }} onClick={this.goBack} className="btn btn-primary">Go Back</button>
 
                 </div>
 

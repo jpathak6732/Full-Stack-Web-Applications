@@ -113,10 +113,10 @@ class OrderDetails extends Component {
                     <h2>Change Order Status</h2>
                     <br />
                     <select class="form-control" onChange={this.handleDropdown}>
-                        <option value="volvo">Volvo</option>
-                        <option value="saab">Saab</option>
-                        <option value="mercedes">Mercedes</option>
-                        <option value="audi">Audi</option>
+                        <option value="volvo">New</option>
+                        <option value="saab">Preparing</option>
+                        <option value="mercedes">Ready</option>
+                        <option value="audi">Delivered</option>
                     </select>
                     <br />
                     <button className="btn btn-primary">Change Status!</button>

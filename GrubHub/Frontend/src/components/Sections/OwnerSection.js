@@ -60,11 +60,12 @@ class OwnerSection extends Component {
                 {/* {redirectVar} */}
                 <div class="container">
                     <h2>List of Sections</h2>
-                    <table class="table">
-                        <thead>
+                    <table class="table table-bordered table-hover" style={{ textAlign: "left" }}>
+                        <thead class="thead-dark" style={{ textAlign: "center" }}>
                             <tr>
                                 <th>Section ID</th>
                                 <th>Section Name</th>
+                                <th>Details</th>
                                 {/* <th>Person Address</th>
                                 <th>Order Status</th>
                                 <th>Action</th> */}

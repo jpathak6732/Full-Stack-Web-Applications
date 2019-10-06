@@ -195,7 +195,7 @@ app.post("/ownersignup", function (req, res) {
 
   bcrypt.hash(req.body.password, 10, function (err, hash) {
 
-    sql = `insert into owner (name,email,password,restaurantname,zipcode) values ('${name}','${email}','${password}','${restaurant}',${zipcode})`;
+    sql = `insert into owner (name,email,password,restaurantname,zipcode) values ('${name}','${email}','${hash}','${restaurant}',${zipcode})`;
     //sql="Select name,email from " + radio + " where password="' + password + '";
     console.log("SQL: " + sql);
 

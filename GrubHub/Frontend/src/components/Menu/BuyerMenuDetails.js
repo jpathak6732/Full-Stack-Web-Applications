@@ -80,7 +80,7 @@ class MenuDetails extends Component {
             <Fragment>
 
                 <td>{this.props.data.name}</td>
-                <td><img style={{ width: "30%", height: "auto", display: "block" }} src={this.state.image} /></td>
+                <td style={{ width: "20%" }}><img style={{ width: "50%", height: "8%" }} src={this.state.image} /></td>
                 <td>{this.props.data.description}</td>
                 <td>{this.props.data.price}</td>
                 <td><input onChange={this.quantityChangeHandler} type="number" autoFocus placeholder="Quantity" style={{ width: "40%", height: "5%" }}></input></td>

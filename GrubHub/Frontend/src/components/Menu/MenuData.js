@@ -59,8 +59,8 @@ class MenuData extends Component {
         return (
             <div>
                 <h3>{this.props.data.sectionname}</h3>
-                <table class="table table-bordered table-hover" >
-                    <thead>
+                <table class="table table-bordered table-hover" style={{ textAlign: "left" }}>
+                    <thead class="thead-dark" style={{ textAlign: "center" }}>
                         <tr>
                             <th>Section</th>
                             <th>Item Name</th>

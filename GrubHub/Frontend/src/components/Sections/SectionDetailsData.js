@@ -108,7 +108,7 @@ class SectionDetailsData extends Component {
             <Fragment>
                 <td>{this.props.data.sectionid}</td>
                 <td><input onChange={this.nameChangeHandler} type="text" id="name" name="name" value={this.state.name} /></td>
-                <td><img style={{ width: "45%", height: "auto", display: "block" }} src={this.state.image} /></td>
+                <td style={{ width: "20%" }}><img style={{ width: "50%", height: "8%" }} src={this.state.image} /></td>
                 <td><input onChange={this.desciptionChangeHandler} type="text" id="description" name="description" value={this.state.description} onChange={this.desciptionChangeHandler} /></td>
                 <td><input onChange={this.priceChangeHandler} type="text" id="price" name="price" value={this.state.price} /></td>
                 <td><button className="btn btn-primary" onClick={this.submitUpdate}>Update</button> </td>

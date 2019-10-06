@@ -7,9 +7,9 @@ import MenuData from "../Menu/MenuData";
 class MenuDetails extends Component {
     constructor(props) {
         super(props);
-        // this.state = {
-        //     books: this.props.books
-        // }
+        this.state = {
+            image: "http://localhost:3001/profilepics/" + this.props.data.itemimage + "",
+        }
         this.viewButton = this.viewButton.bind(this);
     }
 
@@ -41,7 +41,7 @@ class MenuDetails extends Component {
             <Fragment>
                 <td>{this.props.data.sectionid}</td>
                 <td>{this.props.data.name}</td>
-                <td>{this.props.data.itemimage}</td>
+                <td style={{ width: "20%" }}><img style={{ width: "50%", height: "8%" }} src={this.state.image} /></td>
                 <td>{this.props.data.description}</td>
                 <td>{this.props.data.price}</td>
             </Fragment>
