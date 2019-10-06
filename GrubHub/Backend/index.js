@@ -692,7 +692,7 @@ app.get("/home", function (req, res) {
 app.get("/ownerhome", function (req, res) {
   console.log("Inside OwnerHome Login");
 
-  sql = `select * from orders where ownerid=${req.query.idcookie}`;
+  sql = `select * from orders where ownerid=${req.query.idcookie} and status!='Delivered'`;
   console.log("SQL: " + sql);
 
   pool.getConnection(function (err, db) {
@@ -771,6 +771,42 @@ app.post("/cancelorder", function (req, res) {
     db.release()
   });
 });
+
+
+app.post("/changestatus", function (req, res) {
+  console.log("Inside Cancel Order Request");
+  console.log("Req Body : ", req.body);
+
+  var orderid = req.body.orderid;
+  var status = req.body.status;
+
+  if (status === "New" || status === "Preparing" || status === "Ready" || status === "Delivered") {
+    sql = `update orders set status='${status}' where orderid=${orderid}`;
+  } else if (status === "Cancel") {
+    sql = `delete from orders where orderid=${orderid}`;
+  }
+
+  //sql="Select name,email from " + radio + " where password="' + password + '";
+  console.log("SQL: " + sql);
+
+  pool.getConnection(function (err, db) {
+    if (err) {
+      console.log("Error while getting connection")
+    }
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.log("Error occured : " + err);
+      } else {
+        res.writeHead(200, {
+          "Content-Type": "text/plain"
+        });
+        res.end("Successfully cancelled the order");
+      }
+    });
+    db.release()
+  });
+});
+
 
 app.get("/ownersection", function (req, res) {
   console.log("Inside OwnerSection Login");
@@ -1313,7 +1349,7 @@ app.post("/placeorder", function (req, res) {
 
 
 app.get("/buyerpastorders", function (req, res) {
-  console.log("Inside OwnerHome Login");
+  console.log("Inside buyerpastorders");
 
   sql = `select a.orderid, a.status, b.restaurantname from orders a,owner b
   where a.buyerid=${req.query.idcookie} and
@@ -1342,7 +1378,7 @@ app.get("/buyerpastorders", function (req, res) {
 
 
 app.get("/buyerfutureorders", function (req, res) {
-  console.log("Inside OwnerHome Login");
+  console.log("Inside buyerfutureorders ");
 
   sql = `select a.orderid, a.status, b.restaurantname from orders a,owner b
   where a.buyerid=${req.query.idcookie} and
@@ -1370,7 +1406,7 @@ app.get("/buyerfutureorders", function (req, res) {
 });
 
 app.get("/owneroldorders", function (req, res) {
-  console.log("Inside OwnerHome Login");
+  console.log("Inside owneroldorders");
 
   sql = `select orderid, personname, status from orders
   where ownerid=${req.query.idcookie} and status="Delivered"`;

@@ -14,8 +14,9 @@ class OrderDetails extends Component {
             status: "",
             authFlag: false
         }
-        this.cancelbutton = this.cancelbutton.bind(this);
+
         this.gotohome = this.gotohome.bind(this);
+        this.changeStatus = this.changeStatus.bind(this);
         this.handleDropdown = this.handleDropdown.bind(this);
     }
     //get the books data from backend  
@@ -40,18 +41,20 @@ class OrderDetails extends Component {
         });
     };
 
-    cancelbutton = e => {
+    changeStatus = e => {
 
         e.preventDefault();
         const data = {
-            orderid: this.props.match.params.bookid
+            orderid: this.props.match.params.bookid,
+            status: this.state.status
         };
         //set the with credentials to true
         axios.defaults.withCredentials = true;
         //make a post request with the user data
-        axios.post("http://localhost:3001/cancelorder", data).then(response => {
+        axios.post("http://localhost:3001/changestatus", data).then(response => {
             console.log("Status Code : ", response.status);
             if (response.status === 200) {
+                console.log("status changed!")
                 window.location.replace("/ownerhome");
                 this.setState({
                     authFlag: true
@@ -70,6 +73,8 @@ class OrderDetails extends Component {
         e.preventDefault();
         window.location.replace("/ownerhome")
     };
+
+
 
     render() {
         console.log("params " + this.props.match.params)
@@ -113,13 +118,15 @@ class OrderDetails extends Component {
                     <h2>Change Order Status</h2>
                     <br />
                     <select class="form-control" onChange={this.handleDropdown}>
-                        <option value="volvo">New</option>
-                        <option value="saab">Preparing</option>
-                        <option value="mercedes">Ready</option>
-                        <option value="audi">Delivered</option>
+                        <option value="select">Status</option>
+                        <option value="New">New</option>
+                        <option value="Preparing">Preparing</option>
+                        <option value="Ready">Ready</option>
+                        <option value="Delivered">Delivered</option>
+                        <option value="Cancel">Cancel</option>
                     </select>
                     <br />
-                    <button className="btn btn-primary">Change Status!</button>
+                    <button onClick={this.changeStatus} className="btn btn-primary">Change Status!</button>
                     <input
                         type="button"
                         onClick={this.cancelbutton}
