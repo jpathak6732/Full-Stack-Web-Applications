@@ -14,7 +14,7 @@ class BuyerHome extends Component {
         //maintain the state required for this component
         this.state = {
             itemname: "",
-            cuisine: "",
+            search: "",
             items: [],
             // description: "",
             // price: "",
@@ -32,7 +32,7 @@ class BuyerHome extends Component {
 
     selectChangeHandler = e => {
         this.setState({
-            cuisine: e.target.value
+            search: e.target.value.substr(0, 20)
 
         });
         console.log(" change 0]" + this.state.cuisine)
@@ -50,7 +50,7 @@ class BuyerHome extends Component {
         axios.get('http://localhost:3001/viewrestaurants', {
             params: {
                 itemname: this.props.match.params.itemname,
-                cuisine: this.state.cuisine
+                // cuisine: this.state.cuisine
             }
         })
             .then((response) => {
@@ -69,7 +69,10 @@ class BuyerHome extends Component {
     };
 
     render() {
-        let details = this.state.items.map(item => {
+        let predetails = this.state.items.filter((item) => {
+            return item.cuisine.indexOf(this.state.search) != -1
+        })
+        let details = predetails.map(item => {
             return (
                 <tr>
                     <ViewRestaurantsData key={Math.random} data={item}></ViewRestaurantsData>
@@ -121,13 +124,9 @@ class BuyerHome extends Component {
 
                     <br />
 
-                    <div className="rw">
-                        <select name="customSearch" className="custom-search-select" onChange={this.selectChangeHandler}>
-                            <option>Select Cuisine</option>
-                            {options}
-                        </select>
-                        <button className="btn btn-primary" style={{ marginLeft: "1%" }} onClick={this.submitFilter}>Filter</button>
-                    </div>
+                    <input type="text" placeholder="Type here to filter content based on cuisine" onChange={this.selectChangeHandler}></input>
+
+
 
 
                 </div>
