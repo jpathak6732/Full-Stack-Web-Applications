@@ -1014,8 +1014,16 @@ app.post("/deletesectionitems", function (req, res) {
 app.get("/viewrestaurants", function (req, res) {
   console.log("Inside viewrestaurants");
 
+  var cuisine = req.query.cuisine
+
+  if (cuisine === "") {
+    sql = `select id,restaurantname, restaurantimage, cuisine from owner where id in (select ownerid from items where name ="${req.query.itemname}")`;
+  } else {
+    sql = `select id,restaurantname, restaurantimage, cuisine from owner where cuisine = '${cuisine}' and id in (select ownerid from items where name ="${req.query.itemname}")`;
+  }
+
   //sql = `select * from items where sectionid =${req.query.sectionid} `;
-  sql = `select id,restaurantname, restaurantimage, cuisine from owner where id in (select ownerid from items where name ="${req.query.itemname}")`;
+  // sql = `select id,restaurantname, restaurantimage, cuisine from owner where id in (select ownerid from items where name ="${req.query.itemname}")`;
 
   console.log("SQL: " + sql);
 

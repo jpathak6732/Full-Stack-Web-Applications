@@ -14,6 +14,7 @@ class BuyerHome extends Component {
         //maintain the state required for this component
         this.state = {
             itemname: "",
+            cuisine: "",
             items: [],
             // description: "",
             // price: "",
@@ -25,9 +26,18 @@ class BuyerHome extends Component {
         //Bind the handlers to this class
         this.itemnameChangeHandler = this.itemnameChangeHandler.bind(this);
         // this.descriptionChangeHandler = this.descriptionChangeHandler.bind(this);
-        // this.priceChangeHandler = this.priceChangeHandler.bind(this);
+        this.selectChangeHandler = this.selectChangeHandler.bind(this);
         //this.submitSearch = this.submitSearch.bind(this);
     }
+
+    selectChangeHandler = e => {
+        this.setState({
+            cuisine: e.target.value
+
+        });
+        console.log(" change 0]" + this.state.cuisine)
+    };
+
 
     itemnameChangeHandler = e => {
         this.setState({
@@ -36,9 +46,11 @@ class BuyerHome extends Component {
     };
 
     componentDidMount() {
+        console.log("Cuisine " + this.state.cuisine)
         axios.get('http://localhost:3001/viewrestaurants', {
             params: {
-                itemname: this.props.match.params.itemname
+                itemname: this.props.match.params.itemname,
+                cuisine: this.state.cuisine
             }
         })
             .then((response) => {
@@ -50,6 +62,11 @@ class BuyerHome extends Component {
                 });
             });
     }
+
+
+    submitFilter = e => {
+        window.location.reload();
+    };
 
     render() {
         let details = this.state.items.map(item => {
@@ -67,13 +84,22 @@ class BuyerHome extends Component {
             )
         })
 
+        let options = this.state.items.map((data) =>
+            <option
+                key={data.cuisine}
+                value={data.cuisine}
+            >
+                {data.cuisine}
+            </option>
+        );
+
         return (
 
             <div>
                 {/* {redirectVar} */}
                 <div class="container">
                     <h2>List of All Restaurants</h2>
-                    <table class="table table-bordered table-hover" style={{ textAlign: "left" }}>
+                    <table class="table table-bordered table-hover" style={{ textAlign: "left", backgroundColor: "#fafafa" }}>
                         <thead class="thead-dark" style={{ textAlign: "center" }}>
                             <tr>
                                 <th>Restaurant Name</th>
@@ -90,14 +116,17 @@ class BuyerHome extends Component {
                         </tbody>
                     </table>
 
-                    <div className="rw">
-                        <select>
-                            <option value="volvo">Cuisine</option>
-                            <option value="saab">American</option>
-                            <option value="mercedes">Fastfood</option>
 
+
+
+                    <br />
+
+                    <div className="rw">
+                        <select name="customSearch" className="custom-search-select" onChange={this.selectChangeHandler}>
+                            <option>Select Cuisine</option>
+                            {options}
                         </select>
-                        <button className="btn btn-primary" style={{ marginLeft: "1%" }}>Filter</button>
+                        <button className="btn btn-primary" style={{ marginLeft: "1%" }} onClick={this.submitFilter}>Filter</button>
                     </div>
 
 
