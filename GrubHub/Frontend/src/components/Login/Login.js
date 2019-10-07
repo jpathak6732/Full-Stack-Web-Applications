@@ -118,7 +118,7 @@ class Login extends Component {
                 id="login"
                 class="fadeIn second"
                 name="login"
-                placeholder="Username"
+                placeholder="Email"
               />
               <input
                 onChange={this.passwordChangeHandler}

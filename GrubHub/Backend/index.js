@@ -73,18 +73,7 @@ var pool = mysql.createPool({
   database: "myschema"
 });
 
-var Users = [
-  {
-    username: "admin",
-    password: "admin"
-  }
-];
 
-var books = [
-  { BookID: "1", Title: "Book 1", Author: "Author 1", Status: "Yes" },
-  { BookID: "2", Title: "Book 2", Author: "Author 2", Status: "Yes" },
-  { BookID: "3", Title: "Book 3", Author: "Author 3", Status: "Yes" }
-];
 
 var resultObject;
 
@@ -680,15 +669,7 @@ app.post('/ownerprofileuploadrestaurant', function (req, res) {
 
 
 //Route to get All Books when user visits the Home Page
-app.get("/home", function (req, res) {
-  console.log("Inside Home Login");
-  //console.log(req.cookies)
-  res.writeHead(200, {
-    "Content-Type": "application/json"
-  });
-  console.log("Books : ", JSON.stringify(books));
-  res.end(JSON.stringify(books));
-});
+
 
 
 app.get("/ownerhome", function (req, res) {

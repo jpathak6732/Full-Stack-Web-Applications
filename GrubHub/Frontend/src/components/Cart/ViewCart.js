@@ -108,40 +108,42 @@ class ViewCart extends Component {
         // }
         return (
             <div>
-                {/* {redirectVar} */}
-                <div class="container">
-                    <h2>List of All items</h2>
-                    <table class="table table-bordered table-hover" style={{ textAlign: "left", backgroundColor: "#fafafa" }}>
-                        <thead class="thead-dark" style={{ textAlign: "center" }}>
-                            <tr>
-                                <th>Item</th>
-                                <th>Quantity</th>
-                                <th>Price</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {/*Display the Tbale row based on data recieved*/}
-                            {details}
-                            <tr>
-                                <td>Total</td>
-                                <td></td>
-                                <td>{this.state.total}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <form>
+                    {/* {redirectVar} */}
+                    <div class="container">
+                        <h2>List of All items</h2>
+                        <table class="table table-bordered table-hover" style={{ textAlign: "left", backgroundColor: "#fafafa" }}>
+                            <thead class="thead-dark" style={{ textAlign: "center" }}>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {/*Display the Tbale row based on data recieved*/}
+                                {details}
+                                <tr>
+                                    <td>Total</td>
+                                    <td></td>
+                                    <td>{this.state.total}</td>
+                                </tr>
+                            </tbody>
+                        </table>
 
-                    <div>
-                        <h2>Let's get your delivery details</h2>
-                        <br>
-                        </br>
+                        <div>
+                            <h2>Let's get your delivery details</h2>
+                            <br>
+                            </br>
 
-                        <input type="text" onChange={this.addressChangeHandler} placeholder="Delivery Address"></input>
+                            <input type="text" onChange={this.addressChangeHandler} placeholder="Delivery Address" required></input>
+                        </div>
+                        <br></br>
+                        <button onClick={this.placeOrder} className="btn btn-primary">Place Order</button>
+                        <button style={{ marginLeft: "1%" }} onClick={this.goBack} className="btn btn-primary">Go Back</button>
+
                     </div>
-                    <br></br>
-                    <button onClick={this.placeOrder} className="btn btn-primary">Place Order</button>
-                    <button style={{ marginLeft: "1%" }} onClick={this.goBack} className="btn btn-primary">Go Back</button>
-
-                </div>
+                </form>
 
             </div>
 
