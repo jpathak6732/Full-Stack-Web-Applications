@@ -90,6 +90,10 @@ var resultObject;
 
 //Route to handle Post Request Call
 app.post("/login", function (req, res) {
+
+  console.log("Inside Login Post Request");
+  //console.log("Req Body : ", username + "password : ",password);
+  console.log("Req Body : ", req.body);
   var email = req.body.username;
   var password = req.body.password;
   var radio = req.body.radio;
@@ -176,15 +180,13 @@ app.post("/login", function (req, res) {
   // });
   // var username = req.body.username;
   // var password = req.body.password;
-  console.log("Inside Login Post Request");
-  //console.log("Req Body : ", username + "password : ",password);
-  console.log("Req Body : ", req.body);
+
 
 
 });
 
 app.post("/ownersignup", function (req, res) {
-  console.log("Inside Login Post Request");
+  console.log("Inside ownersignup Request");
   console.log("Req Body : ", req.body);
 
   var name = req.body.username;
@@ -195,7 +197,7 @@ app.post("/ownersignup", function (req, res) {
 
   bcrypt.hash(req.body.password, 10, function (err, hash) {
 
-    sql = `insert into owner (name,email,password,restaurantname,zipcode) values ('${name}','${email}','${hash}','${restaurant}',${zipcode})`;
+    sql = `insert into owner (name,email,password,restaurantname,zipcode,profileimage,restaurantimage) values ('${name}','${email}','${hash}','${restaurant}',${zipcode},'pro.jpg','default.png')`;
     //sql="Select name,email from " + radio + " where password="' + password + '";
     console.log("SQL: " + sql);
 
@@ -260,7 +262,7 @@ app.post("/ownerprofile", function (req, res) {
 
 
 app.post("/buyerprofile", function (req, res) {
-  console.log("Inside update owner profile Request");
+  console.log("Inside update buyer profile Request");
   console.log("Req Body : ", req.body);
 
   var name = req.body.username;
@@ -291,7 +293,7 @@ app.post("/buyerprofile", function (req, res) {
 });
 
 app.post("/buyersignup", function (req, res) {
-  console.log("Inside Login Post Request");
+  console.log("Inside buyer signup Request");
   console.log("Req Body : ", req.body);
 
   var name = req.body.username;
@@ -300,7 +302,7 @@ app.post("/buyersignup", function (req, res) {
 
   bcrypt.hash(req.body.password, 10, function (err, hash) {
 
-    sql = `insert into buyer (name,email,password,profileimage) values ('${name}','${email}','${hash}','d.jpeg')`;
+    sql = `insert into buyer (name,email,password,profileimage) values ('${name}','${email}','${hash}','pro.jpeg')`;
     //sql="Select name,email from " + radio + " where password="' + password + '";
     console.log("SQL: " + sql);
 
@@ -690,7 +692,7 @@ app.get("/home", function (req, res) {
 
 
 app.get("/ownerhome", function (req, res) {
-  console.log("Inside OwnerHome Login");
+  console.log("Inside OwnerHome");
 
   sql = `select * from orders where ownerid=${req.query.idcookie} and status!='Delivered'`;
   console.log("SQL: " + sql);
@@ -716,7 +718,7 @@ app.get("/ownerhome", function (req, res) {
 });
 
 app.get("/orderitemdetails", function (req, res) {
-  console.log("Inside Home Login");
+  console.log("Inside orderitemdetails");
 
   sql = `select * from orderdetails where orderid =${req.query.orderid} `;
   console.log("SQL: " + sql);
@@ -746,7 +748,7 @@ app.get("/orderitemdetails", function (req, res) {
 
 
 app.post("/changestatus", function (req, res) {
-  console.log("Inside Cancel Order Request");
+  console.log("Inside changestatus Order Request");
   console.log("Req Body : ", req.body);
 
   var orderid = req.body.orderid;
@@ -781,7 +783,7 @@ app.post("/changestatus", function (req, res) {
 
 
 app.get("/ownersection", function (req, res) {
-  console.log("Inside OwnerSection Login");
+  console.log("Inside OwnerSection");
 
   sql = `select * from sections where ownerid=${req.query.idcookie}`
   console.log("SQL: " + sql);
@@ -836,7 +838,7 @@ app.get("/sectiondetails", function (req, res) {
 
 
 app.get("/sectiondetailsbuyer", function (req, res) {
-  console.log("Inside Section Details");
+  console.log("Inside Section Details buyer");
 
   sql = `select * from items where sectionid =${req.query.sectionid} and ownerid=${req.query.ownerid} `;
   console.log("SQL: " + sql);
@@ -897,7 +899,7 @@ app.post("/updatesectionitems", function (req, res) {
 
 
 app.post("/additem", function (req, res) {
-  console.log("Inside Login Post Request");
+  console.log("Inside additem Request");
   console.log("Req Body : ", req.body);
 
   var itemname = req.body.itemname;
@@ -1010,7 +1012,7 @@ app.post("/deletesectionitems", function (req, res) {
 
 
 app.get("/viewrestaurants", function (req, res) {
-  console.log("Inside Section Details");
+  console.log("Inside viewrestaurants");
 
   //sql = `select * from items where sectionid =${req.query.sectionid} `;
   sql = `select id,restaurantname, restaurantimage, cuisine from owner where id in (select ownerid from items where name ="${req.query.itemname}")`;
@@ -1040,7 +1042,7 @@ app.get("/viewrestaurants", function (req, res) {
 });
 
 app.get("/buyersection", function (req, res) {
-  console.log("Inside BuyerSection Login");
+  console.log("Inside BuyerSection");
 
   sql = `select * from sections where ownerid=${req.query.restaurantid}`;
   console.log("SQL: " + sql);
@@ -1166,39 +1168,35 @@ app.get("/cartitems", function (req, res) {
   console.log("SQL: " + sql);
 
 
-  pool.getConnection(function (err, db) {
+
+  cont.query(sql, (err, result) => {
     if (err) {
-      console.log("Error while getting connection")
+      console.log("Error occured : " + err);
+    } else {
+
+      Object.keys(result).forEach(function (key) {
+        var row = result[key];
+        var cartitem = row.count;
+
+        console.log("Cart Item : " + cartitem);
+
+        res.writeHead(200, {
+          "Content-Type": "text/plain"
+        });
+        //console.log(JSON.stringify(resultObject))
+        res.end(String(cartitem));
+
+      })
+
+
     }
-    db.query(sql, (err, result) => {
-      if (err) {
-        console.log("Error occured : " + err);
-      } else {
-
-        Object.keys(result).forEach(function (key) {
-          var row = result[key];
-          var cartitem = row.count;
-
-          console.log("Cart Item : " + cartitem);
-
-          res.writeHead(200, {
-            "Content-Type": "text/plain"
-          });
-          //console.log(JSON.stringify(resultObject))
-          res.end(String(cartitem));
-
-        })
-
-
-      }
-    });
-    db.release()
   });
+
 });
 
 
 app.post("/placeorder", function (req, res) {
-  console.log("Inside Login Post Request");
+  console.log("Inside place order Request");
   console.log("Req Body : ", req.body);
 
   var item = req.body.items;

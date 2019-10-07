@@ -59,7 +59,7 @@ class OwnerOldOrders extends Component {
                 {/* {redirectVar} */}
                 <div class="container">
                     <h2>List of All Delivered Orders</h2>
-                    <table class="table table-bordered table-hover" style={{ textAlign: "left" }}>
+                    <table class="table table-bordered table-hover" style={{ textAlign: "left", backgroundColor: "#fafafa" }}>
                         <thead class="thead-dark" style={{ textAlign: "center" }}>
                             <tr>
                                 <th>Order ID</th>

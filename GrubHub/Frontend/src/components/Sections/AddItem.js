@@ -16,7 +16,7 @@ class AddItem extends Component {
             description: "",
             price: "",
             sectionid: this.props.match.params.sectionid,
-            imagePath: "http://localhost:3001/profilepics/d.jpeg",
+            imagePath: "http://localhost:3001/profilepics/def.png",
             itemimage: "",
             idcookie: cookie.load("id"),
             authFlag: false

@@ -83,9 +83,9 @@ class Login extends Component {
       redirectVar = <Redirect to="/home" />;
     }
     return (
-      <div>+
+      <div>
 
-        {redirectVar}
+        {/* {redirectVar} */}
         <div class="wrapper fadeInDown">
           <div id="formContent">
             <div class="fadeIn first">

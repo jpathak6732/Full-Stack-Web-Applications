@@ -38,6 +38,7 @@ class Navbar extends Component {
     cookie.remove("cookie", { path: "/" });
     cookie.remove("email", { path: "/" });
   };
+
   render() {
     //if Cookie is set render Logout Button
     let navLogin = null;
@@ -52,7 +53,7 @@ class Navbar extends Component {
               <Link to="/buyerhome">Home</Link>
             </li>
             <li>
-              <Link to="/buyerprofile">Profile </Link>
+              <Link to="/buyerprofile">{cookie.load("name")}'s profile </Link>
             </li>
             <li>
               <Link to="/buyerpastorders">Past Orders</Link>
@@ -84,7 +85,7 @@ class Navbar extends Component {
               <Link to="/ownerhome">Home</Link>
             </li>
             <li>
-              <Link to="/ownerprofile">Profile </Link>
+              <Link to="/ownerprofile">{cookie.load("name")}'s profile </Link>
             </li>
             <li>
               <Link to="/owneroldorders">Old Orders</Link>
@@ -128,9 +129,9 @@ class Navbar extends Component {
     //   redirectVar = <Redirect to="/home" />;
     // }
 
-    if (!cookie.load()) {
-      redirectVar = <Redirect to="home" />
-    }
+    // if (!cookie.load()) {
+    //   redirectVar = <Redirect to="home" />
+    // }
 
     if (cookie.load("cookie") === "buyer") {
       gb =
